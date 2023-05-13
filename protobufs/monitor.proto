@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package monitor;
+
+message PingRequest {
+  string message = 1;
+}
+
+message PingResponse {
+  string message = 1;
+}
+
+message Metric {
+  float load = 1;
+  // Otras métricas
+}
+
+message GetMetricsRequest {
+}
+
+message GetMetricsResponse {
+  repeated Metric metrics = 1;
+}
+
+service Monitor {
+  rpc Ping(PingRequest) returns (PingResponse) {}
+  rpc GetMetrics(GetMetricsRequest) returns (GetMetricsResponse) {}
+}
+
