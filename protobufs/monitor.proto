@@ -22,8 +22,26 @@ message GetMetricsResponse {
   repeated Metric metrics = 1;
 }
 
+message RegisterRequest {
+  string instance_id = 1; // no se si sea mejor int o string
+}
+
+message RegisterResponse {
+  string response = 1;
+}
+
+message UnregisterRequest {
+  string instance_id = 1;// no se si sea mejor int o string
+}
+
+message UnregisterResponse {
+  string response = 1;
+}
+
 service Monitor {
   rpc Ping(PingRequest) returns (PingResponse) {}
   rpc GetMetrics(GetMetricsRequest) returns (GetMetricsResponse) {}
+  rpc Register(RegisterRequest) returns (RegisterResponse) {}
+  rpc Unregister(UnregisterRequest) returns (UnregisterResponse) {}
 }
 
