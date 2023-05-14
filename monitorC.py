@@ -47,7 +47,7 @@ class MonitorC(monitor_pb2_grpc.MonitorCServicer):
         return respuesta.response
     
     # Función para detectar la vivacidad de las instancias de AppInstance
-    def PingPong(self):
+    def ping_pong(self):
         """debo revisar el tema de las instancias o como es que se va a ver"""
         #El metodo se conecta con el MonitorS para dar su respuesta
         """with grpc.insecure_channel('localhost:50051') as channel: #colocamos los datos que necesitemos para poder hacer la conexión
@@ -56,7 +56,7 @@ class MonitorC(monitor_pb2_grpc.MonitorCServicer):
         return self.stub.Ping(monitor_pb2.PingRequest(message='Pong'))
 
     
-    def GetMetrics(self, request, context):
+    def get_metrics(self, request, context):
         return monitor_pb2.Metrics(load=self.load)
 
 def serve():
