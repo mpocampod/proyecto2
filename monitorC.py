@@ -7,20 +7,54 @@ class MonitorC(monitor_pb2_grpc.MonitorCServicer):
     def __init__(self):
         self.alive = True
         self.load = 0.0
+        channel=grpc.insecure_channel('localhost:50051')
+        self.stub = monitor_pb2_grpc.MonitorStub(channel)
+        
 
+    def register(self,instance_id):
+        '''Este metodo le dice al monitor S cuando se ha creado una instancia nueva
 
-    def register(self, request, context):
-        # falta agregar lógica para registrar el MonitorS en el MonitorC
-        return monitor_pb2.MonitorSReply(message='MonitorS registrado con éxito en MonitorC')
+        Args:
+            instance_id (int o string): Identificador de la instancia que se acaba de crear y se quiere enviar al monitorC
+
+        Returns:
+            string: el mensaje de confirmación o error que recibe del monitorC
+        '''        
+        #Este metodo se utilizará despues de crear una instancia nueva para poder decirle al monitor c que se registró
+        """with grpc.insecure_channel('localhost:50051') as channel: #colocamos los datos que necesitemos para poder hacer la conexión
+            stub = monitor_pb2_grpc.MonitorStub(channel)"""
+        
+        respuesta=self.stub.Register(monitor_pb2.RegisterRequest(instance_id=instance_id))
+        return respuesta.response
+        
     
     # Función para desregistrar el MonitorS en el MonitorC
-    def unregister(self, request, context):
-        # falta agregar la lógica para desregistrar el MonitorS en el MonitorC
-        return monitor_pb2.MonitorSReply(message='MonitorS desregistrado con éxito de MonitorC')
+    def unregister(self,instance_id):
+        '''Este metodo le dice al monitor S cuando se ha eliminado el registro de una instancia
+
+        Args:
+            instance_id (int o string): Identificador de la instancia que se quiere eliminar el registro y se quiere enviar al monitorC
+
+        Returns:
+            string: el mensaje de confirmación o error que recibe del monitorC
+        '''  
+        
+        """with grpc.insecure_channel('localhost:50051') as channel: #colocamos los datos que necesitemos para poder hacer la conexión
+            stub = monitor_pb2_grpc.MonitorStub(channel)"""
+            
+        
+        respuesta=self.stub.Unregister(monitor_pb2.UnregisterRequest(instance_id=instance_id))
+        return respuesta.response
     
     # Función para detectar la vivacidad de las instancias de AppInstance
-    def PingPong(self, request, context):
-        return monitor_pb2.Pong(message='Pong!')
+    def PingPong(self):
+        """debo revisar el tema de las instancias o como es que se va a ver"""
+        #El metodo se conecta con el MonitorS para dar su respuesta
+        """with grpc.insecure_channel('localhost:50051') as channel: #colocamos los datos que necesitemos para poder hacer la conexión
+            stub = monitor_pb2_grpc.MonitorStub(channel)"""
+        
+        return self.stub.Ping(monitor_pb2.PingRequest(message='Pong'))
+
     
     def GetMetrics(self, request, context):
         return monitor_pb2.Metrics(load=self.load)
