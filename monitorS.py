@@ -14,8 +14,9 @@ MONITOR_POLL_INTERVAL = 10 # Intervalo de tiempo en segundos para consultar el e
 
 class MonitorSServicer(monitor_pb2_grpc.MonitorSServicer):
     def __init__(self)->None:
-        
-    
+        #configuración inicial de la conexión con el controller
+        self.control=controllerASG()
+
     # Función para registrar el MonitorS en el MonitorC
     def register(self, request, context):
         # falta agregar lógica para registrar el MonitorS en el MonitorC
@@ -36,6 +37,15 @@ class MonitorSServicer(monitor_pb2_grpc.MonitorSServicer):
     def ping(self, request, context):
         # falta agregar la lógica para detectar la vivacidad de las instancias de AppInstance
         return monitor_pb2.MonitorSReply(message='Pong')
+    
+    
+    def autoscaling_policy(self):
+        """Este método se encargaría de definir las políticas de creación y destrucción de instancias para el grupo
+          de autoescalado. Debería tomar como parámetros la configuración de las políticas (por ejemplo,
+          el número mínimo y máximo de instancias) y la configuración de las métricas que se utilizarán para
+            determinar cuándo se deben crear o destruir instancias.
+        """        
+        pass
     
     def main():
 
