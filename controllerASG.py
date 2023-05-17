@@ -55,14 +55,6 @@ class controllerASG:
                 #aca podemos poner los datos que querramos ver
              #   https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/describe_instances.html#describe-instances
                 pass 
-
-    def autoscaling_policy(self):
-        """Este método se encargaría de definir las políticas de creación y destrucción de instancias para el grupo
-          de autoescalado. Debería tomar como parámetros la configuración de las políticas (por ejemplo,
-          el número mínimo y máximo de instancias) y la configuración de las métricas que se utilizarán para
-            determinar cuándo se deben crear o destruir instancias.
-        """        
-        pass
          
     def check_min_instances(self):
         #creo que esto debe de ir en el monitorS
@@ -73,6 +65,7 @@ class controllerASG:
                 self.create_intance()
         except Exception as e:
             print(e)
+    
     def get_my_instances(self):
         """metodo para obtener las instancias que ya se tienen creadas y no permitir que se creen duplicadas
         """        
