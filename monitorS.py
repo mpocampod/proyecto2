@@ -45,8 +45,19 @@ class MonitorS(monitor_pb2_grpc.MonitorSServicer):
 
         min_ins=2
         max_ins=5
-        min_cap=20
+        min_cap=30
         max_cap=60
+
+        instances = controllerASG.get_all_instances()
+        metricas = self.get_metrics(instances)
+
+        if len(instances) < max_ins and len(instances ) >= min_ins and metricas > max_cap:
+        # Crear una nueva instancia
+             controllerASG.create_instance()
+        
+        elif len(instances) <= max_ins and metricas < min_cap:
+        # Eliminar una instancia
+            controllerASG.terminate_instance()
 
         pass
     
