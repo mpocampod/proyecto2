@@ -2,6 +2,7 @@ import time
 import grpc
 import monitor_pb2
 import monitor_pb2_grpc
+import psutil
 import random 
 
 class MonitorC(monitor_pb2_grpc.MonitorCServicer):
@@ -51,6 +52,14 @@ class MonitorC(monitor_pb2_grpc.MonitorCServicer):
         #El metodo se conecta con el MonitorS para dar su respuesta
         """with grpc.insecure_channel('localhost:50051') as channel: #colocamos los datos que necesitemos para poder hacer la conexión
             stub = monitor_pb2_grpc.MonitorStub(channel)"""
+
+        # Nombre del programa que deseas verificar si está en ejecución
+        program_name = "calculadora.py"
+
+        if self.check_process_running(program_name):
+            print(f"El programa '{program_name}' está en ejecución.")
+        else:
+            print(f"El programa '{program_name}' no está en ejecución.")
         
         return self.stub.Ping(monitor_pb2.PingResponse(message='Pong'))
     
@@ -65,8 +74,19 @@ class MonitorC(monitor_pb2_grpc.MonitorCServicer):
         
         
     def get_metrics(self, request, context):
+
         self.capacidad= self.simulacion()
         return monitor_pb2.GetMetricsResponse(capacidad=self.capacidad)
+
+        return monitor_pb2.Metrics(load=self.load)
+    
+
+    def check_process_running(self,process_name):
+        for process in psutil.process_iter(['name']):
+            if process.info['name'] == process_name:
+                return True
+        return False
+
 
     def serve(self):
         server = grpc.server(grpc.Future.ThreadPoolExecutor(max_workers=10))
@@ -81,5 +101,6 @@ class MonitorC(monitor_pb2_grpc.MonitorCServicer):
         except KeyboardInterrupt:
             server.stop(0)
 
+    
     if __name__ == '__main__':
         serve()
