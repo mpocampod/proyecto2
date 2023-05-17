@@ -11,7 +11,7 @@ message PingResponse {
 }
 
 message Metric {
-  float load = 1;
+  float capacidad = 1;
   // Otras métricas
 }
 
@@ -23,7 +23,7 @@ message GetMetricsResponse {
 }
 
 message RegisterRequest {
-  string instance_id = 1; // no se si sea mejor int o string
+  string instance_id = 1; 
 }
 
 message RegisterResponse {
@@ -31,7 +31,7 @@ message RegisterResponse {
 }
 
 message UnregisterRequest {
-  string instance_id = 1;// no se si sea mejor int o string
+  string instance_id = 1;
 }
 
 message UnregisterResponse {

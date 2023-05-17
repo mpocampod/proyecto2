@@ -7,7 +7,6 @@ import random
 class MonitorC(monitor_pb2_grpc.MonitorCServicer):
     def __init__(self):
         self.alive = True
-        self.load = 0.0
         channel=grpc.insecure_channel('localhost:50051')
         self.stub = monitor_pb2_grpc.MonitorStub(channel)
         
@@ -29,7 +28,6 @@ class MonitorC(monitor_pb2_grpc.MonitorCServicer):
         return respuesta.response
         
     
-    # Función para desregistrar el MonitorS en el MonitorC
     def unregister(self,instance_id):
         '''Este metodo le dice al monitor S cuando se ha eliminado el registro de una instancia
 
@@ -54,33 +52,31 @@ class MonitorC(monitor_pb2_grpc.MonitorCServicer):
         """with grpc.insecure_channel('localhost:50051') as channel: #colocamos los datos que necesitemos para poder hacer la conexión
             stub = monitor_pb2_grpc.MonitorStub(channel)"""
         
-        return self.stub.Ping(monitor_pb2.PingRequest(message='Pong'))
+        return self.stub.Ping(monitor_pb2.PingResponse(message='Pong'))
     
     def simulacion(): 
     
         capacidad=random.randint(0, 100)
         cambio=random.uniform(-5, 5)
         capacidad+=cambio
-
-        capacidad_actual=max(0, 100, capacidad)
+        capacidad_actual= max(0, min(100, capacidad))
 
         return capacidad_actual
         
         
     def get_metrics(self, request, context):
         self.capacidad= self.simulacion()
-        return monitor_pb2.Metrics(load=self.capacidad)
+        return monitor_pb2.GetMetricsResponse(capacidad=self.capacidad)
 
-    def serve():
+    def serve(self):
         server = grpc.server(grpc.Future.ThreadPoolExecutor(max_workers=10))
-        monitor_pb2_grpc.add_MonitorCServicer_to_server(MonitorC(), server)
+        monitor_pb2_grpc.add_MonitorServicer_to_server(MonitorC(), server)
         server.add_insecure_port('[::]:50051')
         server.start()
         try:
             while True:
-                # update the load metric in the MonitorC instance
-                # this is just a placeholder for a real implementation
-                MonitorC.load += 1
+                estado = self.simulacion()
+                MonitorC.capacidad = estado
                 time.sleep(5)
         except KeyboardInterrupt:
             server.stop(0)

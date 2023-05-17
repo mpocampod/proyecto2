@@ -12,22 +12,31 @@ MONITORC_REGISTER_URL = '/register' # URL para registrar el MonitorS en el Monit
 MONITORC_UNREGISTER_URL = '/unregister' # URL para desregistrar el MonitorS en el MonitorC
 MONITOR_POLL_INTERVAL = 10 # Intervalo de tiempo en segundos para consultar el estado de las instancias
 
-class MonitorSServicer(monitor_pb2_grpc.MonitorSServicer):
+
+
+class MonitorS(monitor_pb2_grpc.MonitorSServicer):
     def __init__(self)->None:
         #configuración inicial de la conexión con el controller
         self.control=controllerASG()
+        channel=grpc.insecure_channel('localhost:50052')
+        self.stub = monitor_pb2_grpc.MonitorStub(channel)
 
     
     # Función para consultar el estado de las instancias de AppInstance
     def get_metrics(self, request, context):
-        # falta agregar la lógica para consultar el estado de las instancias de AppInstance
-        # y retornar las métricas recolectadas
-        return monitor_pb2.MonitorSMetrics(cpu_load=50, memory_usage=70)
+    # Llama al método get_metrics del MonitorC para obtener la capacidad de la instancia
+        monitor_c = monitor_pb2_grpc.MonitorStub(grpc.insecure_channel('localhost:50051'))
+        respuesta_metricas = monitor_c.get_metrics(monitor_pb2.GetMetricsRequest())
+
+        capacidad = respuesta_metricas.capacidad
+
+        return monitor_pb2.GetMetricsResponse(capacidad=capacidad)
+
     
     # Función para detectar la vivacidad de las instancias de AppInstance
     def ping(self, request, context):
-        # falta agregar la lógica para detectar la vivacidad de las instancias de AppInstance
-        return monitor_pb2.MonitorSReply(message='Pong')
+        response = self.stub.Ping(monitor_pb2.PingRequest(message='Ping'))
+        return response.message
     
     
     def autoscaling_policy(self):
@@ -36,23 +45,24 @@ class MonitorSServicer(monitor_pb2_grpc.MonitorSServicer):
           el número mínimo y máximo de instancias) y la configuración de las métricas que se utilizarán para
             determinar cuándo se deben crear o destruir instancias.
         """        
+        
         pass
     
-    def main():
+    def main(self):
 
         # Crear una instancia del servidor gRPC para el MonitorS
         server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-        monitor_pb2_grpc.add_MonitorSServicer_to_server(MonitorSServicer(), server)
-        server.add_insecure_port('[::]:50051')
+        monitor_pb2_grpc.add_MonitorServicer_to_server(MonitorS(), server)
+        server.add_insecure_port('[::]:50052')
         server.start()
         print('MonitorS en ejecución...')
         
         # Loop principal para consultar el estado de las instancias de AppInstance
         try:
             while True:
-                # Consultar el estado de las instancias de AppInstance y almacenar los datos recolectados
-                # Aquí también se puede incluir la lógica necesaria para crear o eliminar instancias EC2 según sea necesario
-                time.sleep(MONITOR_POLL_INTERVAL)
+                estado = self.get_metrics()
+                MonitorS.capacidad=estado
+                time.sleep(2)
         except KeyboardInterrupt:
             server.stop(0)
         
