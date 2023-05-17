@@ -57,7 +57,7 @@ class controllerASG:
                 pass 
          
     def check_min_instances(self):
-        #creo que esto debe de ir en el monitorS
+
         """metodo se encargará de revisar el numero de instancias que haya, en caso tal de que no se cumpla, deberá crear una instancia nueva
         """        
         try:

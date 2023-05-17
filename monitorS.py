@@ -17,15 +17,6 @@ class MonitorSServicer(monitor_pb2_grpc.MonitorSServicer):
         #configuración inicial de la conexión con el controller
         self.control=controllerASG()
 
-    # Función para registrar el MonitorS en el MonitorC
-    def register(self, request, context):
-        # falta agregar lógica para registrar el MonitorS en el MonitorC
-        return monitor_pb2.MonitorSReply(message='MonitorS registrado con éxito en MonitorC')
-    
-    # Función para desregistrar el MonitorS en el MonitorC
-    def unregister(self, request, context):
-        # falta agregar la lógica para desregistrar el MonitorS en el MonitorC
-        return monitor_pb2.MonitorSReply(message='MonitorS desregistrado con éxito de MonitorC')
     
     # Función para consultar el estado de las instancias de AppInstance
     def get_metrics(self, request, context):
@@ -67,3 +58,5 @@ class MonitorSServicer(monitor_pb2_grpc.MonitorSServicer):
         
     if __name__ == '__main__':
         main()
+
+#el monitor S cuando le pregunta al get metrics cuanta capacidad se esta usando y si es 40 o mas invoca al controles 
