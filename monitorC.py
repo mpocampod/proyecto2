@@ -78,7 +78,6 @@ class MonitorC(monitor_pb2_grpc.MonitorCServicer):
         self.capacidad= self.simulacion()
         return monitor_pb2.GetMetricsResponse(capacidad=self.capacidad)
 
-        return monitor_pb2.Metrics(load=self.load)
     
 
     def check_process_running(self,process_name):
