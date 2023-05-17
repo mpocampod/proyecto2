@@ -6,7 +6,7 @@ import psutil
 import random 
 from concurrent import futures
 
-class MonitorC(monitor_pb2_grpc.MonitorCServicer):
+class MonitorC(monitor_pb2_grpc.MonitorServicer):
     def __init__(self):
         self.alive = True
         channel=grpc.insecure_channel('localhost:50051')

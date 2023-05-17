@@ -4,10 +4,10 @@ import grpc
 import monitor_pb2
 import monitor_pb2_grpc
 from concurrent import futures
-import controllerASG
+from controllerASG import controllerASG
 
 
-class MonitorS(monitor_pb2_grpc.MonitorSServicer):
+class MonitorS(monitor_pb2_grpc.MonitorServicer):
     def __init__(self)->None:
         #configuración inicial de la conexión con el controller
         self.control=controllerASG()
