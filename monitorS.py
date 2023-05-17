@@ -6,13 +6,6 @@ import monitor_pb2_grpc
 from concurrent import futures
 import controllerASG
 
-# Definir las variables globales para la comunicación con el MonitorC
-MONITORC_API_ENDPOINT = 'localhost:50051' # Endpoint del MonitorC
-MONITORC_REGISTER_URL = '/register' # URL para registrar el MonitorS en el MonitorC
-MONITORC_UNREGISTER_URL = '/unregister' # URL para desregistrar el MonitorS en el MonitorC
-MONITOR_POLL_INTERVAL = 10 # Intervalo de tiempo en segundos para consultar el estado de las instancias
-
-
 
 class MonitorS(monitor_pb2_grpc.MonitorSServicer):
     def __init__(self)->None:
@@ -39,13 +32,22 @@ class MonitorS(monitor_pb2_grpc.MonitorSServicer):
         return response.message
     
     
-    def autoscaling_policy(self):
+    def autoscaling_policy(self,min_ins, max_ins, min_cap, max_cap):
         """Este método se encargaría de definir las políticas de creación y destrucción de instancias para el grupo
           de autoescalado. Debería tomar como parámetros la configuración de las políticas (por ejemplo,
           el número mínimo y máximo de instancias) y la configuración de las métricas que se utilizarán para
             determinar cuándo se deben crear o destruir instancias.
         """        
         
+        #si se tienen 2 instancias y la capacidad esta alta entonces se crea otra instancia (llamar al metodo del controller de create_intance)
+        #si se tienen 5 instancias o menos y la capacidad es bajita eliminar instancias (llamar al metodo del controller terminate_instance)
+        #si se tienen 5 instancias y la capacidad es alta, no se puede create_intance
+
+        min_ins=2
+        max_ins=5
+        min_cap=20
+        max_cap=60
+
         pass
     
     def main(self):
@@ -69,4 +71,3 @@ class MonitorS(monitor_pb2_grpc.MonitorSServicer):
     if __name__ == '__main__':
         main()
 
-#el monitor S cuando le pregunta al get metrics cuanta capacidad se esta usando y si es 40 o mas invoca al controles 

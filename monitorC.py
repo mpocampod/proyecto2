@@ -63,15 +63,16 @@ class MonitorC(monitor_pb2_grpc.MonitorCServicer):
             print(f"El programa '{program_name}' no está en ejecución.")
         
         return self.stub.Ping(monitor_pb2.PingResponse(message='Pong'))
-    
+
+    capacidad=40
     def simulacion(): 
-    
-        capacidad=random.randint(0, 100)
+
+        global capacidad 
         cambio=random.uniform(-5, 5)
         capacidad+=cambio
-        capacidad_actual= max(0, min(100, capacidad))
+        capacidad= max(0, min(100, capacidad))
 
-        return capacidad_actual
+        return capacidad
         
         
     def get_metrics(self, request, context):
