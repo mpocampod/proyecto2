@@ -4,6 +4,7 @@ import monitor_pb2
 import monitor_pb2_grpc
 import psutil
 import random 
+from concurrent import futures
 
 class MonitorC(monitor_pb2_grpc.MonitorCServicer):
     def __init__(self):
@@ -88,7 +89,7 @@ class MonitorC(monitor_pb2_grpc.MonitorCServicer):
 
 
     def serve(self):
-        server = grpc.server(grpc.Future.ThreadPoolExecutor(max_workers=10))
+        server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
         monitor_pb2_grpc.add_MonitorServicer_to_server(MonitorC(), server)
         server.add_insecure_port('[::]:50051')
         server.start()
