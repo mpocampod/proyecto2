@@ -2,6 +2,7 @@ import time
 import grpc
 import monitor_pb2
 import monitor_pb2_grpc
+import random 
 
 class MonitorC(monitor_pb2_grpc.MonitorCServicer):
     def __init__(self):
@@ -54,24 +55,35 @@ class MonitorC(monitor_pb2_grpc.MonitorCServicer):
             stub = monitor_pb2_grpc.MonitorStub(channel)"""
         
         return self.stub.Ping(monitor_pb2.PingRequest(message='Pong'))
-
     
+    def simulacion(): 
+    
+        capacidad=random.randint(0, 100)
+        cambio=random.uniform(-5, 5)
+        capacidad+=cambio
+
+        capacidad_actual=max(0, 100, capacidad)
+
+        return capacidad_actual
+        
+        
     def get_metrics(self, request, context):
-        return monitor_pb2.Metrics(load=self.load)
+        self.capacidad= self.simulacion()
+        return monitor_pb2.Metrics(load=self.capacidad)
 
-def serve():
-    server = grpc.server(grpc.Future.ThreadPoolExecutor(max_workers=10))
-    monitor_pb2_grpc.add_MonitorCServicer_to_server(MonitorC(), server)
-    server.add_insecure_port('[::]:50051')
-    server.start()
-    try:
-        while True:
-            # update the load metric in the MonitorC instance
-            # this is just a placeholder for a real implementation
-            MonitorC.load += 1
-            time.sleep(5)
-    except KeyboardInterrupt:
-        server.stop(0)
+    def serve():
+        server = grpc.server(grpc.Future.ThreadPoolExecutor(max_workers=10))
+        monitor_pb2_grpc.add_MonitorCServicer_to_server(MonitorC(), server)
+        server.add_insecure_port('[::]:50051')
+        server.start()
+        try:
+            while True:
+                # update the load metric in the MonitorC instance
+                # this is just a placeholder for a real implementation
+                MonitorC.load += 1
+                time.sleep(5)
+        except KeyboardInterrupt:
+            server.stop(0)
 
-if __name__ == '__main__':
-    serve()
+    if __name__ == '__main__':
+        serve()
