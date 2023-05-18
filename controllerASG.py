@@ -13,7 +13,7 @@ class controllerASG:
         self.min_instances=2
         self.max_instances=5
 
-    def create_intance(self):
+    def create_instance(self):
         """Este método se encargaría de crear una nueva instancia de EC2 basada en la imagen AMI personalizada que
         se ha definido previamente. Debería tomar como parámetros la configuración de la instancia
         """        
