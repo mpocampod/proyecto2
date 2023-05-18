@@ -10,6 +10,7 @@ from concurrent import futures
 class MonitorC(monitor_pb2_grpc.MonitorServicer):
     def __init__(self):
         self.alive = True
+        self.capacidad=40
         channel=grpc.insecure_channel('localhost:50051')
         self.stub = monitor_pb2_grpc.MonitorStub(channel)
         
@@ -65,17 +66,15 @@ class MonitorC(monitor_pb2_grpc.MonitorServicer):
             ans=(f"El programa '{program_name}' no está en ejecución.")
             print(ans)
         
-        return self.stub.Ping(monitor_pb2.PingResponse(message='Pong'))
+        return self.stub.Ping(monitor_pb2.PingResponse(message=ans))
 
-    capacidad=40
-    def simulacion(): 
-
-        global capacidad 
+    
+    def simulacion(self): 
         cambio=random.uniform(-5, 5)
-        capacidad+=cambio
-        capacidad= max(0, min(100, capacidad))
+        self.capacidad+=cambio
+        self.capacidad= max(0, min(100, self.capacidad))
 
-        return capacidad
+        return self.capacidad
         
         
     def get_metrics(self, request, context):
