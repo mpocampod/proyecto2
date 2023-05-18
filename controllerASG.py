@@ -55,16 +55,16 @@ class controllerASG:
         for reservation in ans['Reservations']:
             for instance in reservation['Instances']:
                 #aca podemos poner los datos que querramos ver
-             #   https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/describe_instances.html#describe-instances
+            #   https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/describe_instances.html#describe-instances
                 pass 
-         
+        
     def check_min_instances(self):
 
         """metodo se encargará de revisar el numero de instancias que haya, en caso tal de que no se cumpla, deberá crear una instancia nueva
         """        
         try:
-            while len(self.instance_list)<self.min_instances: 
-                self.create_intance()
+            while len(self.new_intance_list)<self.min_instances: 
+                self.create_instance()
         except Exception as e:
             print(e)
     
