@@ -15,7 +15,7 @@ class MonitorC(monitor_pb2_grpc.MonitorServicer):
         self.stub = monitor_pb2_grpc.MonitorStub(channel)
         
 
-    def register(self,instance_id):
+    def register(self):
         '''Este metodo le dice al monitor S cuando se ha creado una instancia nueva
 
         Args:
@@ -25,10 +25,9 @@ class MonitorC(monitor_pb2_grpc.MonitorServicer):
             string: el mensaje de confirmación o error que recibe del monitorC
         '''        
         #Este metodo se utilizará despues de crear una instancia nueva para poder decirle al monitor c que se registró
-        """with grpc.insecure_channel('localhost:50051') as channel: #colocamos los datos que necesitemos para poder hacer la conexión
-            stub = monitor_pb2_grpc.MonitorStub(channel)"""
         
-        respuesta=self.stub.Register(monitor_pb2.RegisterRequest(instance_id=instance_id))
+        #respuesta=self.stub.Register(monitor_pb2.RegisterRequest(instance_id=instance_id))
+        respuesta=self.stub.Register(monitor_pb2.RegisterResponse('se ha registrado'))
         return respuesta.response
         
     
@@ -40,21 +39,16 @@ class MonitorC(monitor_pb2_grpc.MonitorServicer):
 
         Returns:
             string: el mensaje de confirmación o error que recibe del monitorC
-        '''  
+        '''      
         
-        """with grpc.insecure_channel('localhost:50051') as channel: #colocamos los datos que necesitemos para poder hacer la conexión
-            stub = monitor_pb2_grpc.MonitorStub(channel)"""
-            
-        
-        respuesta=self.stub.Unregister(monitor_pb2.UnregisterRequest(instance_id=instance_id))
+        #respuesta=self.stub.Unregister(monitor_pb2.UnregisterRequest(instance_id=instance_id))
+        respuesta=self.stub.Unregister(monitor_pb2.UnregisterResponse('se ha eliminado del registro'))
         return respuesta.response
     
     # Función para detectar la vivacidad de las instancias de AppInstance
     def ping_pong(self):
         """debo revisar el tema de las instancias o como es que se va a ver"""
         #El metodo se conecta con el MonitorS para dar su respuesta
-        """with grpc.insecure_channel('localhost:50051') as channel: #colocamos los datos que necesitemos para poder hacer la conexión
-            stub = monitor_pb2_grpc.MonitorStub(channel)"""
 
         # Nombre del programa que deseas verificar si está en ejecución
         program_name = "calculadora.py"
@@ -77,7 +71,7 @@ class MonitorC(monitor_pb2_grpc.MonitorServicer):
         return self.capacidad
         
         
-    def get_metrics(self, request, context):
+    def get_metrics(self):
 
         self.capacidad= self.simulacion()
         return monitor_pb2.GetMetricsResponse(capacidad=self.capacidad)
@@ -95,7 +89,7 @@ def serve():
     monitorc_temp=MonitorC()
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     monitor_pb2_grpc.add_MonitorServicer_to_server(MonitorC(), server)
-    server.add_insecure_port('[::]:50051')
+   # server.add_insecure_port('[::]:50051')
     server.start()
     try:
         while True:

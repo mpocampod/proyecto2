@@ -11,28 +11,29 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
     def __init__(self)->None:
         #configuración inicial de la conexión con el controller
         self.control=controllerASG()
-        channel=grpc.insecure_channel('localhost:50052')
+        channel=grpc.insecure_channel('[::]:50052')
         self.stub = monitor_pb2_grpc.MonitorStub(channel)
+        self.min_cap=30
+        self.max_cap=60
 
     
     # Función para consultar el estado de las instancias de AppInstance
-    def get_metrics(self, request, context):
+    def get_metrics(self):
     # Llama al método get_metrics del MonitorC para obtener la capacidad de la instancia
-        monitor_c = monitor_pb2_grpc.MonitorStub(grpc.insecure_channel('localhost:50051'))
-        respuesta_metricas = monitor_c.get_metrics(monitor_pb2.GetMetricsRequest())
-
+        respuesta_metricas=self.stub.GetMetrics(monitor_pb2.GetMetricsRequest())
+        
         capacidad = respuesta_metricas.capacidad
 
         return monitor_pb2.GetMetricsResponse(capacidad=capacidad)
 
     
     # Función para detectar la vivacidad de las instancias de AppInstance
-    def ping(self, request, context):
+    def ping(self):
         response = self.stub.Ping(monitor_pb2.PingRequest(message='Ping'))
         return response.message
     
     
-    def autoscaling_policy(self,min_ins, max_ins, min_cap, max_cap):
+    def autoscaling_policy(self):
         """Este método se encargaría de definir las políticas de creación y destrucción de instancias para el grupo
           de autoescalado. Debería tomar como parámetros la configuración de las políticas (por ejemplo,
           el número mínimo y máximo de instancias) y la configuración de las métricas que se utilizarán para
@@ -43,42 +44,40 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
         #si se tienen 5 instancias o menos y la capacidad es bajita eliminar instancias (llamar al metodo del controller terminate_instance)
         #si se tienen 5 instancias y la capacidad es alta, no se puede create_intance
 
-        min_ins=2
-        max_ins=5
-        min_cap=30
-        max_cap=60
+        
 
-        instances = controllerASG.get_all_instances()
+        instances = self.control.get_all_instances()
         metricas = self.get_metrics(instances)
 
-        if len(instances) < max_ins and len(instances ) >= min_ins and metricas > max_cap:
+        if len(instances) < self.control.min_instances or len(instances ) >= self.control.min_instances and metricas > max_cap:
         # Crear una nueva instancia
-             controllerASG.create_instance()
+             self.control.create_instance()
         
-        elif len(instances) <= max_ins and metricas < min_cap:
+        elif len(instances) <= self.control.max_instances and metricas < self.min_cap:
         # Eliminar una instancia
-            controllerASG.terminate_instance()
+            self.control.terminate_instance()
 
-        pass
+        elif len(instances)>self.control.max_instances and metricas > self.max_cap:
+            print('Ya no se pueden crear mas instancias ya que está en el limite')
     
-    def main(self):
-
-        # Crear una instancia del servidor gRPC para el MonitorS
-        server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-        monitor_pb2_grpc.add_MonitorServicer_to_server(MonitorS(), server)
-        server.add_insecure_port('[::]:50052')
-        server.start()
-        print('MonitorS en ejecución...')
-        
-        # Loop principal para consultar el estado de las instancias de AppInstance
-        try:
-            while True:
-                estado = self.get_metrics()
-                MonitorS.capacidad=estado
-                time.sleep(2)
-        except KeyboardInterrupt:
-            server.stop(0)
-        
-    if __name__ == '__main__':
-        main()
+def main():
+    monitor_s=MonitorS()
+    # Crear una instancia del servidor gRPC para el MonitorS
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    monitor_pb2_grpc.add_MonitorServicer_to_server(monitor_s, server)
+    server.add_insecure_port('[::]:50052')
+    server.start()
+    print(f'MonitorS en ejecución en el puerto ')
+    
+    # Loop principal para consultar el estado de las instancias de AppInstance
+    try:
+        while True:
+            estado = monitor_s.get_metrics()
+            MonitorS.capacidad=estado
+            time.sleep(2)
+    except KeyboardInterrupt:
+        server.stop(0)
+    
+if __name__ == '__main__':
+    main()
 

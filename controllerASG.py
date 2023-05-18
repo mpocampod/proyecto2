@@ -5,7 +5,8 @@ class controllerASG:
         HOST = '[::]:8080'
         my_session = boto3.session.Session()
         self.ec2 = boto3.resource(
-            'ec2', region_name='tu_region', 
+            'ec2', 
+            region_name='us-east-1', 
             aws_access_key_id='tu_access_key', 
             aws_secret_access_key='tu_secret_access_key')
         self.new_intance_list=[]
