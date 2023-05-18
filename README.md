@@ -27,25 +27,24 @@ escalamiento permiten mediante diferentes métricas adicionar o disminuir unidad
 
 Este proyecto diseñará e implementará un servicio de auto escalamiento que operará sobre instancias EC2 de AWS de Amazon. A nivel de aplicaciones o procesos, se diseñarán e implementarán tres así: 
 
-1. MonitorS: Proceso principal de monitoreo que periódicamente consulta el estado de vivacidad y carga de las instancias de aplicación (AppInstance) en las cuales correo un proceso MonitorC
-que ofrece varios servicios mediante una API hacia el MonitorS.
+1. MonitorS: Proceso principal de monitoreo que periódicamente consulta el estado de vivacidad y carga de las instancias de aplicación (AppInstance) en las cuales correo un proceso MonitorC que ofrece varios servicios mediante una API hacia el MonitorS.
   o Las comunicaciones entre MonitorS y MonitorC serán a través de gRPC.
   2. Algunos de los servicios que implementará MonitorC son:
-- Ping/Pong o Heartbeat para detectar vivacidad de la instancia de la AppInstance
-- GetMetrics: conjunto de métricas como Carga (medida entre 0 y 100% que mide la carga de una máquina), para efectos de este proyecto, cada grupo
-deberá simular e ir modificando esta métrica. Se espera que esta función de simulación cambie gradualmente y no bruscamente.
-- Registro y Desregistro del MonitorS
-- Eventualmente otros servicios que por su diseño requieran definir, diseñar e
-implementar.
+    - Ping/Pong o Heartbeat para detectar vivacidad de la instancia de la AppInstance
+    - GetMetrics: conjunto de métricas como Carga (medida entre 0 y 100% que mide la carga de una máquina), para efectos de este proyecto, cada grupo
+    deberá simular e ir modificando esta métrica. Se espera que esta función de simulación cambie gradualmente y no bruscamente.
+    - Registro y Desregistro del MonitorS
+    - Eventualmente otros servicios que por su diseño requieran definir, diseñar e
+    implementar.
 
 3. ControllerASG: Es un proceso o aplicación que corre en la misma instancia del MonitorS. Tiene acceso a toda la información recolectada por el el MonitorS por medio de memoria
 compartida. Este ControllerASG ejecuta las siguientes funciones:
 
-  Se comunica con el API SDK de la nube para ejecutar diferentes funciones de Infraestructura como Código, es decir, mediante programación puede invocar la creación, modificación, borrado entre otros de diferentes servicios de nube.
-    - En este caso, se requiere solo acceder al servicio de gestión de instancias EC2.
-    - En grupo de trabajo, primero deberá instanciar una máquina EC2 con el software base, la AppInstance y el agente MonitorC.
-- Deberá pensar y definir el mecanismo de configuración de la IP o URL o un servicio de localización del MonitorS.
-- A partir de esta instancia, se deberá crear una imagen AMI personalizada, que servirá de base para la creación de nuevas instancias por el ControllerASG.
+  - Se comunica con el API SDK de la nube para ejecutar diferentes funciones de Infraestructura como Código, es decir, mediante programación puede invocar la creación, modificación, borrado entre otros de diferentes servicios de nube.
+      - En este caso, se requiere solo acceder al servicio de gestión de instancias EC2.
+      - En grupo de trabajo, primero deberá instanciar una máquina EC2 con el software base, la AppInstance y el agente MonitorC.
+  - Deberá pensar y definir el mecanismo de configuración de la IP o URL o un servicio de localización del MonitorS.
+  - A partir de esta instancia, se deberá crear una imagen AMI personalizada, que servirá de base para la creación de nuevas instancias por el ControllerASG.
 
 
 ### Configuración de Instancias en AWS
