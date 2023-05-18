@@ -1,3 +1,4 @@
+import multiprocessing
 import time
 import grpc
 import monitor_pb2
@@ -6,7 +7,7 @@ import psutil
 import random 
 from concurrent import futures
 
-class MonitorC(monitor_pb2_grpc.MonitorCServicer):
+class MonitorC(monitor_pb2_grpc.MonitorServicer):
     def __init__(self):
         self.alive = True
         channel=grpc.insecure_channel('localhost:50051')
@@ -58,13 +59,15 @@ class MonitorC(monitor_pb2_grpc.MonitorCServicer):
         program_name = "calculadora.py"
 
         if self.check_process_running(program_name):
-            print(f"El programa '{program_name}' está en ejecución.")
+            ans=(f"El programa '{program_name}' está en ejecución.")
+            print(ans)
         else:
-            print(f"El programa '{program_name}' no está en ejecución.")
+            ans=(f"El programa '{program_name}' no está en ejecución.")
+            print(ans)
         
-        return self.stub.Ping(monitor_pb2.PingResponse(message='Pong'))
+        return self.stub.Ping(monitor_pb2.PingResponse(message=ans))
     
-    def simulacion(): 
+    def simulacion(self): 
     
         capacidad=random.randint(0, 100)
         cambio=random.uniform(-5, 5)
@@ -88,19 +91,20 @@ class MonitorC(monitor_pb2_grpc.MonitorCServicer):
         return False
 
 
-    def serve(self):
-        server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-        monitor_pb2_grpc.add_MonitorServicer_to_server(MonitorC(), server)
-        server.add_insecure_port('[::]:50051')
-        server.start()
-        try:
-            while True:
-                estado = self.simulacion()
-                MonitorC.capacidad = estado
-                time.sleep(5)
-        except KeyboardInterrupt:
-            server.stop(0)
+def serve():
+    monitorc_temp=MonitorC()
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    monitor_pb2_grpc.add_MonitorServicer_to_server(MonitorC(), server)
+    server.add_insecure_port('[::]:50051')
+    server.start()
+    try:
+        while True:
+            estado = monitorc_temp.simulacion()
+            MonitorC.capacidad = estado
+            time.sleep(5)
+    except KeyboardInterrupt:
+        server.stop(0)
 
-    
-    if __name__ == '__main__':
-        serve()
+if __name__ == '__main__':
+    serv = multiprocessing.Process(target=serve)
+    serv.start()
