@@ -2,6 +2,8 @@ import boto3
 
 class controllerASG:
     def __init__(self) -> None:
+        HOST = '[::]:8080'
+        my_session = boto3.session.Session()
         self.ec2 = boto3.resource(
             'ec2', region_name='tu_region', 
             aws_access_key_id='tu_access_key', 
@@ -77,6 +79,12 @@ class controllerASG:
                         self.new_intance_list.append(instance['InstanceId'])
         except Exception as e:
             print(e)      
+    
+    def get_ipv4(self,instance_id):
+        response = self.ec2.describe_instances(InstanceIds=[instance_id])
+        ipv4_publico = response['Reservations'][0]['Instances'][0]['PublicIpAddress']
+        print(f"La dirección IPv4 pública de la instancia {instance_id} es {ipv4_publico}")
+        return ipv4_publico
 
     def set_new_instance(self):
         """metodo para poder añadir a la lista de instancias creadas la instancia que acabamos de crear
