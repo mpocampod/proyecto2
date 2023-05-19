@@ -5,3 +5,5 @@ cd Proyecto2
 pip install -r requirements.txt
 cd app
 python3 calculadora.py &
+cd ..
+python3 monitorC.py 
