@@ -81,12 +81,13 @@ def main():
     server.start()
     print(f'MonitorS en ejecución en el puerto ')
     monitor_s.control.check_min_instances()
+    monitor_s.autoscaling_policy()
     # Loop principal para consultar el estado de las instancias de AppInstance
     try:
         while True:
             estado = monitor_s.get_metrics()
             MonitorS.capacidad=estado
-            monitor_s.autoscaling_policy()
+            
             time.sleep(2)
     except KeyboardInterrupt:
         server.stop(0)
