@@ -72,6 +72,7 @@ class controllerASG:
     def check_min_instances(self):
         """metodo se encargará de revisar el numero de instancias que haya, en caso tal de que no se cumpla, deberá crear una instancia nueva
         """        
+        print(f'estos son las new_instance_list {self.new_intance_list}')
         try:
             while len(self.new_intance_list)<self.min_instances: 
                 self.create_instance()
