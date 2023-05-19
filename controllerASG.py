@@ -23,6 +23,7 @@ class controllerASG:
         self.existing_instance_list=[]
         self.min_instances=2
         self.max_instances=5
+        self.get_my_instances()
 
     def create_instance(self):
         """Este método se encargaría de crear una nueva instancia de EC2 basada en la imagen AMI personalizada que
@@ -117,7 +118,8 @@ class controllerASG:
             for reservation in ans['Reservations']:
                 for instance in reservation['Instances']:
                     print(instance)
-                    if instance['InstanceId'] not in self.new_instance_list and instance['InstanceId'] not in self.existing_instance_list:
+                    a=self.get_all_instances()
+                    if instance['InstanceId'] not in a:
                         self.new_instance_list.append(instance['InstanceId'])
         except Exception as e:
             print(e) 
