@@ -38,9 +38,10 @@ class controllerASG:
                 MinCount=1,
                 MaxCount=1      
             )
+            self.set_new_instance()
         except Exception as e:
             print(e)
-        self.set_new_instance()
+        
 
     def terminate_instance(self,instance_id)->bool:
         """Este método se encargaría de terminar una instancia de EC2 específica.
@@ -76,6 +77,7 @@ class controllerASG:
         try:
             while len(self.new_instance_list)<self.min_instances: 
                 self.create_instance()
+                print(f'estas son las instanias de new_instance {self.new_instance_list}')
         except Exception as e:
             print(e)
     
@@ -108,8 +110,8 @@ class controllerASG:
         try:
             for reservation in ans['Reservations']:
                 for instance in reservation['Instances']:
-                    if instance['InstanceId'] not in self.existing_instance_list:
-                        self.existing_instance_list.append(instance['InstanceId'])
+                    if instance['InstanceId'] not in self.new_instance_list:
+                        self.new_instance_list.append(instance['InstanceId'])
         except Exception as e:
             print(e) 
 
