@@ -17,7 +17,7 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
         for instances_id in self.control.get_my_instances():
             print(str(self.control.get_all_instances()))
             instances_ipv4=self.control.get_ipv4(instances_id)
-            channel=grpc.insecure_channel(f'{str(instances_ipv4)}:50052')
+            channel=grpc.insecure_channel(f'{str(instances_ipv4)}:50051')
             self.stub = monitor_pb2_grpc.MonitorStub(channel)
             self.my_stub.append(self.stub)
             #print(f'este es my_stub {str(self.my_stub)}')
@@ -77,7 +77,7 @@ def main():
     # Crear una instancia del servidor gRPC para el MonitorS
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     monitor_pb2_grpc.add_MonitorServicer_to_server(monitor_s, server)
-    server.add_insecure_port('[::]:50052')
+    server.add_insecure_port('[::]:50051')
     server.start()
     print(f'MonitorS en ejecución en el puerto ')
     monitor_s.control.check_min_instances()

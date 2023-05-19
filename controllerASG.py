@@ -93,9 +93,12 @@ class controllerASG:
     
     def get_ipv4(self,instance_id):
         response = self.ec2_client.describe_instances(InstanceIds=[instance_id])
-        ipv4_publico = response['Reservations'][0]['Instances'][0]['PublicIpAddress']
-        print(f"La dirección IPv4 pública de la instancia {instance_id} es {ipv4_publico}")
-        return ipv4_publico
+        try:
+            ipv4_publico = response['Reservations'][0]['Instances'][0]['PublicIpAddress']
+            print(f"La dirección IPv4 pública de la instancia {instance_id} es {ipv4_publico}")
+            return ipv4_publico
+        except:
+            print(f'No se ha encontrado una ip para {instance_id}')
 
     def set_new_instance(self):
         """metodo para poder añadir a la lista de instancias creadas la instancia que acabamos de crear
