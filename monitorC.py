@@ -9,9 +9,10 @@ from concurrent import futures
 
 class MonitorC(monitor_pb2_grpc.MonitorServicer):
     def __init__(self):
+        host='[::]:50051'
         self.alive = True
         self.capacidad=40
-        channel=grpc.insecure_channel('localhost:50051')
+        channel=grpc.insecure_channel(host)
         self.stub = monitor_pb2_grpc.MonitorStub(channel)
         
 

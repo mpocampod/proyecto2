@@ -11,8 +11,15 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
     def __init__(self)->None:
         #configuración inicial de la conexión con el controller
         self.control=controllerASG()
-        channel=grpc.insecure_channel('[::]:50052')
-        self.stub = monitor_pb2_grpc.MonitorStub(channel)
+
+        #ciclo para crear la conexión con todos las instancias
+        self.my_stub=[]
+        for instances_id in self.control.get_my_instances():
+            instances_ipv4=self.control.get_ipv4(instances_id)
+            channel=grpc.insecure_channel(f'{str(instances_ipv4)}:50052')
+            self.stub = monitor_pb2_grpc.MonitorStub(channel)
+            self.my_stub.append(self.stub)
+        
         self.min_cap=30
         self.max_cap=60
 
@@ -24,7 +31,8 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
         
         capacidad = respuesta_metricas.capacidad
 
-        return monitor_pb2.GetMetricsResponse(capacidad=capacidad)
+        return monitor_pb2.GetMetricsResponse(capacidad=capacidad) #revisar esto
+
 
     
     # Función para detectar la vivacidad de las instancias de AppInstance
@@ -39,24 +47,19 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
           el número mínimo y máximo de instancias) y la configuración de las métricas que se utilizarán para
             determinar cuándo se deben crear o destruir instancias.
         """        
-        
-        #si se tienen 2 instancias y la capacidad esta alta entonces se crea otra instancia (llamar al metodo del controller de create_intance)
-        #si se tienen 5 instancias o menos y la capacidad es bajita eliminar instancias (llamar al metodo del controller terminate_instance)
-        #si se tienen 5 instancias y la capacidad es alta, no se puede create_intance
-
-        
-
         instances = self.control.get_all_instances()
-        metricas = self.get_metrics(instances)
+        metricas = self.get_metrics()
 
+        #si se tienen 2 instancias y la capacidad esta alta entonces se crea otra instancia (llamar al metodo del controller de create_intance)
         if len(instances) < self.control.min_instances or len(instances ) >= self.control.min_instances and metricas > max_cap:
         # Crear una nueva instancia
-             self.control.create_instance()
-        
+            self.control.create_instance()
+    
+        #si se tienen 5 instancias o menos y la capacidad es bajita eliminar instancias (llamar al metodo del controller terminate_instance)
         elif len(instances) <= self.control.max_instances and metricas < self.min_cap:
-        # Eliminar una instancia
             self.control.terminate_instance()
 
+        #si se tienen 5 instancias y la capacidad es alta, no se puede create_intance
         elif len(instances)>self.control.max_instances and metricas > self.max_cap:
             print('Ya no se pueden crear mas instancias ya que está en el limite')
     
