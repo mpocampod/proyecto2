@@ -110,7 +110,7 @@ class controllerASG:
         try:
             for reservation in ans['Reservations']:
                 for instance in reservation['Instances']:
-                    if instance['InstanceId'] not in self.new_instance_list:
+                    if instance['InstanceId'] not in self.new_instance_list and instance['InstanceId'] not in self.existing_instance_list:
                         self.new_instance_list.append(instance['InstanceId'])
         except Exception as e:
             print(e) 
