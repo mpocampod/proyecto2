@@ -4,13 +4,6 @@ class controllerASG:
     def __init__(self) -> None:
         HOST = '[::]:8080'
         my_session = boto3.session.Session()
-        """
-        self.ec2 = boto3.resource(
-            'ec2', 
-            region_name='us-east-1',
-            aws_access_key_id='tu_access_key',
-            aws_secret_access_key='tu_secret_access_key')
-        """
         self.ec2_client = boto3.client(
             'ec2',
             region_name='us-east-1',
@@ -32,12 +25,15 @@ class controllerASG:
         self.get_my_instances()
         try:
             print('Creando Instancia en EC2 ...')
+            with open('userdata.sh', 'r') as file:
+                user_data_script = file.read()
             response=self.ec2_client.run_instances(
                 ImageId='ami-013d6ae76556595f0',
                 InstanceType='t2.micro',
                 KeyName='p2',
                 MinCount=1,
-                MaxCount=1      
+                MaxCount=1,
+                UserData=user_data_script     
             )
             instance_id = response['Instances'][0]['InstanceId']
             self.ec2_client.get_waiter('instance_running').wait(InstanceIds=[instance_id])
