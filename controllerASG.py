@@ -32,14 +32,21 @@ class controllerASG:
         self.get_my_instances()
         try:
             print('Creando Instancia en EC2 ...')
-            self.ec2_client.run_instances(
+            response=self.ec2_client.run_instances(
                 ImageId='ami-013d6ae76556595f0',
                 InstanceType='t2.micro',
                 KeyName='p2',
                 MinCount=1,
                 MaxCount=1      
             )
-            self.set_new_instance()
+            instance_id = response['Instances'][0]['InstanceId']
+            self.ec2_client.get_waiter('instance_running').wait(InstanceIds=[instance_id])
+            # Obtener la dirección IP pública de la instancia
+            response = self.ec2_client.describe_instances(InstanceIds=[instance_id])
+            ipv4_publico = response['Reservations'][0]['Instances'][0]['PublicIpAddress']
+
+            print(f"La dirección IP pública de la instancia es: {ipv4_publico}")
+            self.new_instance_list.append(instance_id)
         except Exception as e:
             print(e)
         
@@ -110,19 +117,10 @@ class controllerASG:
         except:
             print(f'No se ha encontrado una ip para {instance_id}')
 
-    def set_new_instance(self):
+    def set_new_instance(self,instance_id):
         """metodo para poder añadir a la lista de instancias creadas la instancia que acabamos de crear
         """        
-        ans=self.ec2_client.describe_instances()
-        try:
-            for reservation in ans['Reservations']:
-                for instance in reservation['Instances']:
-                    print(instance)
-                    a=self.get_all_instances()
-                    if instance['InstanceId'] not in a:
-                        self.new_instance_list.append(instance['InstanceId'])
-        except Exception as e:
-            print(e) 
+        self.new_instance_list.append(instance_id)
 
     def get_all_instances(self):
         """metodo que devuelve la union de las instancias ya existentes con las nuevas
