@@ -13,9 +13,10 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
         self.control=controllerASG()
 
         #ciclo para crear la conexión con todos las instancias
+        self.check_min_instances()
         self.my_stub=[]
-        for instances_id in self.control.get_my_instances():
-            print(str(self.control.get_all_instances()))
+        for instances_id in self.control.get_new_instances():
+            print(str(self.control.get_new_instances()))
             instances_ipv4=self.control.get_ipv4(instances_id)
             channel=grpc.insecure_channel(f'{str(instances_ipv4)}:50051')
             self.stub = monitor_pb2_grpc.MonitorStub(channel)
@@ -81,14 +82,13 @@ def main():
     server.start()
     print(f'MonitorS en ejecución en el puerto ')
 
-    monitor_s.control.check_min_instances()
-
-    monitor_s.autoscaling_policy()
+    
     # Loop principal para consultar el estado de las instancias de AppInstance
     try:
         while True:
             estado = monitor_s.get_metrics()
             MonitorS.capacidad=estado
+            monitor_s.autoscaling_policy()
             
             time.sleep(2)
     except KeyboardInterrupt:

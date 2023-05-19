@@ -81,6 +81,12 @@ class controllerASG:
         except Exception as e:
             print(e)
     
+
+    def get_new_instances(self):
+        """_summary_
+        """       
+        return self.new_instance_list
+
     def get_my_instances(self):
         """metodo para obtener las instancias que ya se tienen creadas y no permitir que se creen duplicadas
         """        
