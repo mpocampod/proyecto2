@@ -7,9 +7,9 @@ class controllerASG:
         self.ec2_client = boto3.client(
             'ec2',
             region_name='us-east-1',
-            aws_access_key_id='ASIATQCL7MV5UYYLKWX4',
-            aws_session_token='FwoGZXIvYXdzEGUaDOY+9T8g4Vr22DloXiLIARlEpEymnZ6tFcI2pN0sE4RTEuTogip7ZBnYtBabvocfhHqI9f0GafIS3H51lMG7JAs78NSNljsowLQG5nF2TNaGdvTMUTsPf3EGAbjTKNgl7HWOSTvPuwY3rlIU3mlMfNYRyVJaO8uoLmhcqW3Qy1e/Oy/7lW0ZCaj5xEof6iPb27BuDRgViTRijLMFsskvV5KcBh5KpQI2DXgPDmON7SlOipk348tNrPXLgAJBNRNifxYuzlGEnPsGNMDHpI14TSqn2nYLlS6AKIuen6MGMi17fP+e5j/vTqoI5rtqNADyHaI0GtqwH+C7+pbPCHK/xlguID+jmHGMb3/uqm4=',
-            aws_secret_access_key='fhc/7MK6zjewNgigY461bNbvnwawWwJ4YUS3e1eO'
+            aws_access_key_id='ASIATQCL7MV5TTD2KD4R',
+            aws_session_token='FwoGZXIvYXdzEGkaDDZy+I6+Ti2zC5YhGyLIAT9t7gA1+Dx6fovSC9jz829R6+xl0GlBsXzvnPPQ/o3Wsnjf+Z1bmSKIGchoIirZtDCEwvOiJYXHubPkfqt4EM6pT7ZtHJtSOW9urhHonwfKZPff4/BCOjae+HX43bavx85OwM764aQMy9QupnBC8Cf4NiF7lSRSM2BYfWu11lEHBnVEYKF1PKkbPmzoDrXkb6+8t7Njbu4SL4Nxwo19cePH7sTHY/KQXfPSQ+baXrbB9ccShS8kVN19akyB0wy1e73qi34gMSX0KI6YoKMGMi0X2bKLViptfV0uy+m6VQUY+4pDgIBiZajnU+xCuN1cROUixIris/cyRadTGeU=',
+            aws_secret_access_key='yOnCkBBKEXTVWefGBNeCl90dCifzarjEEQfKiH32'
             )
 
         self.new_instance_list=[]
