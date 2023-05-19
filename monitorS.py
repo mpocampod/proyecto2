@@ -15,11 +15,12 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
         #ciclo para crear la conexión con todos las instancias
         self.my_stub=[]
         for instances_id in self.control.get_my_instances():
+            print(str(self.control.get_all_instances()))
             instances_ipv4=self.control.get_ipv4(instances_id)
             channel=grpc.insecure_channel(f'{str(instances_ipv4)}:50052')
             self.stub = monitor_pb2_grpc.MonitorStub(channel)
             self.my_stub.append(self.stub)
-            print(f'este es my_stub {str(self.my_stub)}')
+            #print(f'este es my_stub {str(self.my_stub)}')
         
         self.min_cap=30
         self.max_cap=60
@@ -67,6 +68,9 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
         #si se tienen 5 instancias y la capacidad es alta, no se puede create_intance
         elif len(instances)>self.control.max_instances and metricas > self.max_cap:
             print('Ya no se pueden crear mas instancias ya que está en el limite')
+        
+        #si la instancia está usandosose mucho, la elimina
+        #if len(instances)
     
 def main():
     monitor_s=MonitorS()

@@ -7,16 +7,17 @@ class controllerASG:
         """
         self.ec2 = boto3.resource(
             'ec2', 
-            region_name='us-east-1d',
+            region_name='us-east-1',
             aws_access_key_id='tu_access_key',
             aws_secret_access_key='tu_secret_access_key')
         """
         self.ec2_client = boto3.client(
             'ec2',
-            region_name='us-east-1d',
-            aws_access_key_id='tu_access_key',
-            aws_session_token='',
-            aws_secret_access_key='tu_secret_access_key')
+            region_name='us-east-1',
+            aws_access_key_id='ASIATQCL7MV54F26J4HR',
+            aws_session_token='FwoGZXIvYXdzEGEaDELCxrBTc3q7dDWtRyLIAYlYkZQGy7R05SBUlVn5pVflrx4iwUOB+mLImlCIspfkIjikKpwlhI0zXkR85XzSMRSSjJDAOlCECW9P6PUySmuSpZ5B6L+eY/p6xt0tHqWOanRkGFCQlDDrc6w/oEemudbLKf5mVtet8K/LjifM2t+ZzZDlPlmoSYYtKtN8cyyPdaAE2Pp96SmdE3xDlrLYlZEiMSzaG8/N2azVSXEsDzOTOXs8PctPsgtaCVsIdSSqpP0CNY9j1CT4kmQz7z7JA8F5v1tVdg6lKNu3nqMGMi27Ln7F7Zf6FxUw5DIPdc4CKF9epJIW9LgvrgvoNH9OPyGkyLjAJ3vB9ngABVo=',
+            aws_secret_access_key='UsaCq+fYYl7DtvAkos3xqYTYFPz647i8/qDUPkA/'
+            )
 
         self.new_intance_list=[]
         self.existing_instance_list=[]
@@ -31,9 +32,9 @@ class controllerASG:
         try:
             print('Creando Instancia en EC2 ...')
             self.ec2_client.run_instances(
-                ImageId='',
+                ImageId='ami-013d6ae76556595f0',
                 InstanceType='t2.micro',
-                KeyName='',
+                KeyName='p2.pem',
                 MinCount=1,
                 MaxCount=1      
             )
