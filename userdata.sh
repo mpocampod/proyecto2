@@ -4,4 +4,4 @@ sudo apt install python3-pip
 cd Proyecto2
 pip install -r requirements.txt
 cd app
-python3 calculadora.py
+python3 calculadora.py &
