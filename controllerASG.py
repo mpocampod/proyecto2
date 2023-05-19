@@ -3,7 +3,6 @@ import boto3
 class controllerASG:
     def __init__(self) -> None:
         HOST = '[::]:8080'
-        """
         my_session = boto3.session.Session()
         """
         self.ec2 = boto3.resource(
