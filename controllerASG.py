@@ -113,10 +113,10 @@ class controllerASG:
         """metodo para poder añadir a la lista de instancias creadas la instancia que acabamos de crear
         """        
         ans=self.ec2_client.describe_instances()
-        print(ans)
         try:
             for reservation in ans['Reservations']:
                 for instance in reservation['Instances']:
+                    print(instance)
                     if instance['InstanceId'] not in self.new_instance_list and instance['InstanceId'] not in self.existing_instance_list:
                         self.new_instance_list.append(instance['InstanceId'])
         except Exception as e:
