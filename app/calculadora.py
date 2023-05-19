@@ -23,6 +23,9 @@ def calculator():
         return render_template('calculator.html', result=result)
     else:
         return render_template('calculator.html')
-
+    
+@app.route('/', methods=['GET'])
+def template():
+    return render_template('calculator.html')
 if __name__ == '__main__':
     app.run(debug=True)
