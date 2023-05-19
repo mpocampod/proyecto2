@@ -4,11 +4,20 @@ class controllerASG:
     def __init__(self) -> None:
         HOST = '[::]:8080'
         my_session = boto3.session.Session()
+        """
         self.ec2 = boto3.resource(
             'ec2', 
-            region_name='us-east-1', 
-            aws_access_key_id='tu_access_key', 
+            region_name='us-east-1d',
+            aws_access_key_id='tu_access_key',
             aws_secret_access_key='tu_secret_access_key')
+        """
+        self.ec2_client = boto3.client(
+            'ec2',
+            region_name='us-east-1d',
+            aws_access_key_id='tu_access_key',
+            aws_session_token='',
+            aws_secret_access_key='tu_secret_access_key')
+
         self.new_intance_list=[]
         self.existing_instance_list=[]
         self.min_instances=2
@@ -21,7 +30,7 @@ class controllerASG:
         self.get_my_instances()
         try:
             print('Creando Instancia en EC2 ...')
-            self.ec2.run_instances(
+            self.ec2_client.run_instances(
                 ImageId='',
                 InstanceType='t2.micro',
                 KeyName='',
@@ -38,7 +47,7 @@ class controllerASG:
         """
         try:
             print(f'terminando instancia {instance_id} ...')
-            self.ec2.terminate_instances(InstanceIds=[instance_id])
+            self.ec2_client.terminate_instances(InstanceIds=[instance_id])
             self.new_intance_list.remove(instance_id)
             print(f"se ha terminado la instancia con id: {instance_id}")
             print(f'instancias restantes: {str(self.new_intance_list)}')
@@ -52,7 +61,7 @@ class controllerASG:
         actualmente en la cuenta de AWS. Debería devolver información como el ID de la instancia, la dirección IP,
         el estado de la instancia, etc.
         """        
-        ans=self.ec2.describe_instances()
+        ans=self.ec2_client.describe_instances()
         for reservation in ans['Reservations']:
             for instance in reservation['Instances']:
                 #aca podemos poner los datos que querramos ver
@@ -60,7 +69,6 @@ class controllerASG:
                 pass 
         
     def check_min_instances(self):
-
         """metodo se encargará de revisar el numero de instancias que haya, en caso tal de que no se cumpla, deberá crear una instancia nueva
         """        
         try:
@@ -72,17 +80,18 @@ class controllerASG:
     def get_my_instances(self):
         """metodo para obtener las instancias que ya se tienen creadas y no permitir que se creen duplicadas
         """        
-        ans=self.ec2.describe_instances()
+        ans=self.ec2_client.describe_instances()
         try:
             for reservation in ans['Reservations']:
                 for instance in reservation['Instances']:
                     if instance['InstanceId'] not in self.existing_instance_list:
                         self.new_intance_list.append(instance['InstanceId'])
+            return self.new_intance_list
         except Exception as e:
             print(e)      
     
     def get_ipv4(self,instance_id):
-        response = self.ec2.describe_instances(InstanceIds=[instance_id])
+        response = self.ec2_client.describe_instances(InstanceIds=[instance_id])
         ipv4_publico = response['Reservations'][0]['Instances'][0]['PublicIpAddress']
         print(f"La dirección IPv4 pública de la instancia {instance_id} es {ipv4_publico}")
         return ipv4_publico
@@ -90,7 +99,7 @@ class controllerASG:
     def set_new_instance(self):
         """metodo para poder añadir a la lista de instancias creadas la instancia que acabamos de crear
         """        
-        ans=self.ec2.describe_instances()
+        ans=self.ec2_client.describe_instances()
         try:
             for reservation in ans['Reservations']:
                 for instance in reservation['Instances']:
@@ -105,5 +114,3 @@ class controllerASG:
         lista_combinada=self.existing_instance_list+self.new_intance_list
         print(lista_combinada)
         return lista_combinada
-
-
