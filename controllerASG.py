@@ -19,7 +19,7 @@ class controllerASG:
             aws_secret_access_key='UsaCq+fYYl7DtvAkos3xqYTYFPz647i8/qDUPkA/'
             )
 
-        self.new_intance_list=[]
+        self.new_instance_list=[]
         self.existing_instance_list=[]
         self.min_instances=2
         self.max_instances=5
@@ -49,9 +49,9 @@ class controllerASG:
         try:
             print(f'terminando instancia {instance_id} ...')
             self.ec2_client.terminate_instances(InstanceIds=[instance_id])
-            self.new_intance_list.remove(instance_id)
+            self.new_instance_list.remove(instance_id)
             print(f"se ha terminado la instancia con id: {instance_id}")
-            print(f'instancias restantes: {str(self.new_intance_list)}')
+            print(f'instancias restantes: {str(self.new_instance_list)}')
             return True
         except Exception as e:
             print(e)
@@ -72,9 +72,9 @@ class controllerASG:
     def check_min_instances(self):
         """metodo se encargará de revisar el numero de instancias que haya, en caso tal de que no se cumpla, deberá crear una instancia nueva
         """        
-        print(f'estos son las new_instance_list {self.new_intance_list}')
+        print(f'estos son las new_instance_list {self.new_instance_list}')
         try:
-            while len(self.new_intance_list)<self.min_instances: 
+            while len(self.new_instance_list)<self.min_instances: 
                 self.create_instance()
         except Exception as e:
             print(e)
@@ -87,8 +87,8 @@ class controllerASG:
             for reservation in ans['Reservations']:
                 for instance in reservation['Instances']:
                     if instance['InstanceId'] not in self.existing_instance_list:
-                        self.new_intance_list.append(instance['InstanceId'])
-            return self.new_intance_list
+                        self.existing_instance_list.append(instance['InstanceId'])
+            return self.existing_instance_list
         except Exception as e:
             print(e)      
     
@@ -116,6 +116,6 @@ class controllerASG:
     def get_all_instances(self):
         """metodo que devuelve la union de las instancias ya existentes con las nuevas
         """
-        lista_combinada=self.existing_instance_list+self.new_intance_list
+        lista_combinada=self.existing_instance_list+self.new_instance_list
         print(lista_combinada)
         return lista_combinada
