@@ -34,7 +34,7 @@ class controllerASG:
             self.ec2_client.run_instances(
                 ImageId='ami-013d6ae76556595f0',
                 InstanceType='t2.micro',
-                KeyName='p2.pem',
+                KeyName='p2',
                 MinCount=1,
                 MaxCount=1      
             )
