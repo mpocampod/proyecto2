@@ -80,7 +80,9 @@ def main():
     server.add_insecure_port('[::]:50051')
     server.start()
     print(f'MonitorS en ejecución en el puerto ')
+    print('entra a chekck min')
     monitor_s.control.check_min_instances()
+    print('sale de check_min')
     monitor_s.autoscaling_policy()
     # Loop principal para consultar el estado de las instancias de AppInstance
     try:
