@@ -13,7 +13,7 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
         self.control=controllerASG()
 
         #ciclo para crear la conexión con todos las instancias
-        self.check_min_instances()
+        self.control.check_min_instances()
         self.my_stub=[]
         for instances_id in self.control.get_new_instances():
             print(str(self.control.get_new_instances()))
