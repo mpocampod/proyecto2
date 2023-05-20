@@ -29,7 +29,7 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
             self.stub = monitor_pb2_grpc.MonitorStub(channel)
             self.my_stub.append(self.stub)
             #print(f'este es my_stub {str(self.my_stub)}')
-        
+        print('PASOOOOO EL INIt')
         self.min_cap=30
         self.max_cap=60
 
@@ -48,7 +48,6 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
     # Llama al método GetMetrics del MonitorC para obtener la capacidad de la instancia
         for stubs in self.my_stub:
             respuesta_metricas=stubs.GetMetrics(monitor_pb2.GetMetricsRequest())
-        
             capacidad = respuesta_metricas.capacidad
             print(capacidad)
 
