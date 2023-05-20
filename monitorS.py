@@ -13,11 +13,13 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
         self.control=controllerASG()
 
         #ciclo para crear la conexión con todos las instancias
+        self.control.new_instance_list.append()
         self.control.check_min_instances()
         self.my_stub=[]
-        print('ejemplo')
-        channel=grpc.insecure_channel('44.201.192.212:50051')
-        print('fin ejemploo')
+        
+        #channel=grpc.insecure_channel('44.201.192.212:50051')
+        #channel=grpc.insecure_channel('44.202.49.41:50051')
+        
         for instances_id in self.control.get_new_instances():
             print(str(self.control.get_new_instances()))
             instances_ipv4=self.control.get_ipv4(instances_id)

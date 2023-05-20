@@ -13,7 +13,7 @@ class controllerASG:
             aws_secret_access_key='yOnCkBBKEXTVWefGBNeCl90dCifzarjEEQfKiH32'
             )
 
-        self.new_instance_list=[]
+        self.new_instance_list=['i-0913b2e280d131c82','i-0eb76cb45eb94cfd2']
         self.existing_instance_list=[]
         self.min_instances=2
         self.max_instances=5
@@ -31,7 +31,7 @@ class controllerASG:
             git clone https://github.com/mpocampod/proyecto2.git
             sudo apt update -y
             sudo apt install -y python3-pip
-            cd Proyecto2
+            cd proyecto2
             pip install -r requirements.txt
             cd app
             python3 calculadora.py &
