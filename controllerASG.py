@@ -35,7 +35,6 @@ class controllerASG:
                 sudo apt install -y python3-pip
                 cd proyecto2
                 pip install -r requirements.txt
-                cd app
                 python3 app/calculadora.py & python3 monitorC.py 
             """
 
@@ -96,7 +95,6 @@ class controllerASG:
         try:
             while len(self.new_instance_list)<self.min_instances: 
                 self.create_instance()
-                self.new_instance_list.append('i-0d4bc6982acdecbdd')
                 print(f'estas son las instanias de new_instance {self.new_instance_list}')
         except Exception as e:
             print(e)
