@@ -29,24 +29,24 @@ class controllerASG:
         try:
             print('Creando Instancia en EC2 ...')
             # Contenido del script que deseas ejecutar
-            script_content = """#!/bin/bash
-                git clone https://github.com/mpocampod/proyecto2.git
-                sudo apt update -y
-                sudo apt install -y python3-pip
-                cd proyecto2
-                pip install -r requirements.txt
-                python3 app/calculadora.py & python3 monitorC.py 
-            """
+            commands = [
+    'git clone https://github.com/mpocampod/proyecto2.git',
+    'sudo apt update -y',
+    'sudo apt install -y python3-pip',
+    'cd proyecto2',
+    'pip install -r requirements.txt',
+    'python3 app/calculadora.py & python3 monitorC.py'
+]
 
 # Codifica el contenido del script en Base64
-            encoded_script = base64.b64encode(script_content.encode('utf-8')).decode('utf-8')
+
             response=self.ec2_client.run_instances(
                 ImageId='ami-0246c9d7b9f039b62',
                 InstanceType='t2.micro',
                 KeyName='p2',
                 MinCount=1,
                 MaxCount=1,
-                UserData=encoded_script
+                UserData='#!/bin/bash\n{}\n'.format('\n'.join(commands))
             )
             instance_id = response['Instances'][0]['InstanceId']
             self.ec2_client.get_waiter('instance_running').wait(InstanceIds=[instance_id])
