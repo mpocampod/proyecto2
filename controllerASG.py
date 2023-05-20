@@ -8,9 +8,9 @@ class controllerASG:
         self.ec2_client = boto3.client(
             'ec2',
             region_name='us-east-1',
-            aws_access_key_id='ASIATQCL7MV5TTD2KD4R',
-            aws_session_token='FwoGZXIvYXdzEGkaDDZy+I6+Ti2zC5YhGyLIAT9t7gA1+Dx6fovSC9jz829R6+xl0GlBsXzvnPPQ/o3Wsnjf+Z1bmSKIGchoIirZtDCEwvOiJYXHubPkfqt4EM6pT7ZtHJtSOW9urhHonwfKZPff4/BCOjae+HX43bavx85OwM764aQMy9QupnBC8Cf4NiF7lSRSM2BYfWu11lEHBnVEYKF1PKkbPmzoDrXkb6+8t7Njbu4SL4Nxwo19cePH7sTHY/KQXfPSQ+baXrbB9ccShS8kVN19akyB0wy1e73qi34gMSX0KI6YoKMGMi0X2bKLViptfV0uy+m6VQUY+4pDgIBiZajnU+xCuN1cROUixIris/cyRadTGeU=',
-            aws_secret_access_key='yOnCkBBKEXTVWefGBNeCl90dCifzarjEEQfKiH32'
+            aws_access_key_id='ASIATQCL7MV57OYTKZH4',
+            aws_session_token='FwoGZXIvYXdzEHgaDGwBHt2ABBN5n3bfsyLIAdVs48TAaAhk9c1qYrPKgnkU9bHjedZQa7cj4vus7wIu3Gqg4mNaKzlKnIK5qGKNgF/qujR9xAtpzd4sTODxp1769AP5JlprR6FiJa1LRhZitoV9qDixgvVZ8/1auf/HlqeMp9pPn8I4W3ZjuF/f4Ylxpp6R5L4C7ARpKGdsEXnJE2OyrJscLwnUDlCJiwoIepzVhdu2kPkNzyJRx4APHIUHUeppvVoFgoF7I/+QkyrtaRNJW/im1UeuUXtux95SHhH5rSfi0XxQKPm8o6MGMi1UwzIgItIVL8sNj00xL2VY9tYCuEpTzw5D/6GP9GvEOV3AEikOSvx15Wrwilw=',
+            aws_secret_access_key='35yT243ln0KQd65+KI1M1WlkV04CCTizFSbQe5lV'
             )
 
         self.new_instance_list=['i-0913b2e280d131c82','i-0eb76cb45eb94cfd2']
@@ -43,7 +43,7 @@ class controllerASG:
 # Codifica el contenido del script en Base64
             encoded_script = base64.b64encode(script_content.encode('utf-8')).decode('utf-8')
             response=self.ec2_client.run_instances(
-                ImageId='ami-07c4c758eb44a38cd',
+                ImageId='ami-0246c9d7b9f039b62',
                 InstanceType='t2.micro',
                 KeyName='p2',
                 MinCount=1,
