@@ -74,7 +74,8 @@ class MonitorC(monitor_pb2_grpc.MonitorServicer):
         
     def GetMetrics(self,request):
 
-        self.capacidad= self.simulacion()
+        #self.capacidad= self.simulacion()
+        self.capacidad=int(input('que resultado de la simulación desea?'))
         return monitor_pb2.GetMetricsResponse(capacidad=self.capacidad)
 
     
