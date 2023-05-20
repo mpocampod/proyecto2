@@ -29,20 +29,21 @@ class controllerASG:
             # Contenido del script que deseas ejecutar
             script_content = '''#!/bin/bash
             git clone https://github.com/mpocampod/proyecto2.git
-            sudo apt update 
-            sudo apt install python3-pip
+            sudo apt update -y
+            sudo apt install -y python3-pip
             cd Proyecto2
             pip install -r requirements.txt
             cd app
             python3 calculadora.py &
             cd ..
             python3 monitorC.py 
+
             '''
 
 # Codifica el contenido del script en Base64
             encoded_script = base64.b64encode(script_content.encode('utf-8')).decode('utf-8')
             response=self.ec2_client.run_instances(
-                ImageId='ami-013d6ae76556595f0',
+                ImageId='ami-07c4c758eb44a38cd',
                 InstanceType='t2.micro',
                 KeyName='p2',
                 MinCount=1,
