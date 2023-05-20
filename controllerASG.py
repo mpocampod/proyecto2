@@ -28,18 +28,15 @@ class controllerASG:
         try:
             print('Creando Instancia en EC2 ...')
             # Contenido del script que deseas ejecutar
-            script_content = '''#!/bin/bash
+            script_content = """#!/bin/bash
             git clone https://github.com/mpocampod/proyecto2.git
             sudo apt update -y
             sudo apt install -y python3-pip
             cd proyecto2
             pip install -r requirements.txt
             cd app
-            python3 calculadora.py &
-            cd ..
-            python3 monitorC.py 
-
-            '''
+            python3 app/calculadora.py & python3 monitorC.py 
+            """
 
 # Codifica el contenido del script en Base64
             encoded_script = base64.b64encode(script_content.encode('utf-8')).decode('utf-8')
