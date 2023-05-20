@@ -16,7 +16,7 @@ class MonitorC(monitor_pb2_grpc.MonitorServicer):
         self.stub = monitor_pb2_grpc.MonitorStub(channel)
         
 
-    def register(self):
+    def Register(self,request,context):
         '''Este metodo le dice al monitor S cuando se ha creado una instancia nueva
 
         Args:
@@ -72,7 +72,7 @@ class MonitorC(monitor_pb2_grpc.MonitorServicer):
         return self.capacidad
         
         
-    def get_metrics(self):
+    def GetMetrics(self,request):
 
         self.capacidad= self.simulacion()
         return monitor_pb2.GetMetricsResponse(capacidad=self.capacidad)

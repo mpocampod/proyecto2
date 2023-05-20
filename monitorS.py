@@ -35,8 +35,8 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
 
     
     # Función para consultar el estado de las instancias de AppInstance
-    def get_metrics(self):
-    # Llama al método get_metrics del MonitorC para obtener la capacidad de la instancia
+    def GetMetrics(self):
+    # Llama al método GetMetrics del MonitorC para obtener la capacidad de la instancia
         for stubs in self.my_stub:
             respuesta_metricas=stubs.GetMetrics(monitor_pb2.GetMetricsRequest())
         
@@ -62,7 +62,7 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
             determinar cuándo se deben crear o destruir instancias.
         """        
         instances = self.control.get_all_instances()
-        metricas = self.get_metrics()
+        metricas = self.GetMetrics()
 
         #si se tienen 2 instancias y la capacidad esta alta entonces se crea otra instancia (llamar al metodo del controller de create_intance)
         if len(instances) < self.control.min_instances or len(instances ) >= self.control.min_instances and metricas > self.max_cap:
@@ -93,7 +93,7 @@ def main():
     # Loop principal para consultar el estado de las instancias de AppInstance
     try:
         while True:
-            estado = monitor_s.get_metrics()
+            estado = monitor_s.GetMetrics()
             MonitorS.capacidad=estado
             monitor_s.autoscaling_policy()
             
