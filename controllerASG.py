@@ -14,7 +14,7 @@ class controllerASG:
             )
 
         #self.new_instance_list=['i-0913b2e280d131c82','i-0eb76cb45eb94cfd2']
-        self.new_instance_list=['i-0d4bc6982acdecbdd']
+        self.new_instance_list=[]
         #self.new_instance_list=[]
         self.existing_instance_list=[]
         self.min_instances=2
@@ -95,6 +95,7 @@ class controllerASG:
         try:
             while len(self.new_instance_list)<self.min_instances: 
                 self.create_instance()
+                self.new_instance_list.append('i-0d4bc6982acdecbdd')
                 print(f'estas son las instanias de new_instance {self.new_instance_list}')
         except Exception as e:
             print(e)
