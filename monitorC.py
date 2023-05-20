@@ -8,8 +8,8 @@ import random
 from concurrent import futures
 
 class MonitorC(monitor_pb2_grpc.MonitorServicer):
-    def __init__(self):
-        host='[::]:50051'
+    def __init__(self,jost,):
+        host=jost
         self.alive = True
         self.capacidad=40
         channel=grpc.insecure_channel(host)
@@ -87,10 +87,12 @@ class MonitorC(monitor_pb2_grpc.MonitorServicer):
 
 
 def serve():
-    monitorc_temp=MonitorC()
+    host='[::]:50051'
+    monitorc_temp=MonitorC(host)
+    
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    monitor_pb2_grpc.add_MonitorServicer_to_server(MonitorC(), server)
-   # server.add_insecure_port('[::]:50051')
+    monitor_pb2_grpc.add_MonitorServicer_to_server(MonitorC(host), server)
+    server.add_insecure_port(host)
     server.start()
     try:
         while True:
