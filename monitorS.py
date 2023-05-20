@@ -71,7 +71,8 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
     
         #si se tienen 5 instancias o menos y la capacidad es bajita eliminar instancias (llamar al metodo del controller terminate_instance)
         elif len(instances) <= self.control.max_instances and metricas < self.min_cap:
-            self.control.terminate_instance()
+            self.control.terminate_instance('i-0b13cb0b4921008b4')
+            print('terminando instancia i-0b13cb0b4921008b4')
 
         #si se tienen 5 instancias y la capacidad es alta, no se puede create_intance
         elif len(instances)>self.control.max_instances and metricas > self.max_cap:
