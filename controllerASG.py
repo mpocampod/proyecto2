@@ -13,8 +13,8 @@ class controllerASG:
             aws_secret_access_key='35yT243ln0KQd65+KI1M1WlkV04CCTizFSbQe5lV'
             )
 
-        self.new_instance_list=['i-0eb76cb45eb94cfd2','i-0913b2e280d131c82']
-        #self.new_instance_list=[]
+        #self.new_instance_list=['i-0eb76cb45eb94cfd2','i-0913b2e280d131c82']
+        self.new_instance_list=[]
         self.existing_instance_list=[]
         self.min_instances=2
         self.max_instances=5
