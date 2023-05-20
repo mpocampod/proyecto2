@@ -33,7 +33,16 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
         self.min_cap=30
         self.max_cap=60
 
-    
+    #used instances NUEVO_____________
+    def get_used_instances(self):
+        used_instances = []
+        instances = self.control.get_all_instances()  
+
+        for instance in instances:
+            if instance.state == "running":  # Verificar el estado de la instancia
+                used_instances.append(instance)
+
+        return used_instances 
     # Función para consultar el estado de las instancias de AppInstance
     def GetMetrics(self):
     # Llama al método GetMetrics del MonitorC para obtener la capacidad de la instancia
@@ -53,8 +62,8 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
             response = stubs.Ping(monitor_pb2.PingRequest(message='Ping'))
             print(str(response.message))
         return response.message
-    
-    
+
+
     def autoscaling_policy(self):
         """Este método se encargaría de definir las políticas de creación y destrucción de instancias para el grupo
           de autoescalado. Debería tomar como parámetros la configuración de las políticas (por ejemplo,
@@ -63,6 +72,14 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
         """        
         instances = self.control.get_all_instances()
         metricas = self.GetMetrics()
+        #USED INSTANCES NUEVO_________
+        used_instances = self.control.get_used_instances()
+        
+        # Eliminar instancias no utilizadas NUEVO_________________________
+        for instance in instances:
+            if instance not in used_instances:
+                self.control.terminate_instance(instance)
+                print(f"Instancia {instance} terminada")
 
         #si se tienen 2 instancias y la capacidad esta alta entonces se crea otra instancia (llamar al metodo del controller de create_intance)
         if len(instances) < self.control.min_instances or len(instances ) >= self.control.min_instances and metricas > self.max_cap:
