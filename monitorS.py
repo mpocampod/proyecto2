@@ -45,7 +45,7 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
         return used_instances 
     # Función para consultar el estado de las instancias de AppInstance
     def GetMetrics(self):
-    # Llama al método GetMetrics del MonitorC para obtener la capacidad de la instancia
+# Llama al método GetMetrics del MonitorC para obtener la capacidad de la instancia
         for stubs in self.my_stub:
             respuesta_metricas=stubs.GetMetrics(monitor_pb2.GetMetricsRequest())
             capacidad = respuesta_metricas.capacidad
@@ -71,6 +71,11 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
         """        
         instances = self.control.get_all_instances()
         metricas = self.GetMetrics()
+        for metrica in metricas:
+            capacidad = metrica.capacidad
+            # Realiza las operaciones necesarias con la capacidad
+            print(f'Capacidad recibida: {capacidad}')
+
         #USED INSTANCES NUEVO_________
         used_instances = self.control.get_used_instances()
         
