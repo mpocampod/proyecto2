@@ -14,7 +14,8 @@ class controllerASG:
             )
 
         #self.new_instance_list=['i-0913b2e280d131c82','i-0eb76cb45eb94cfd2']
-        self.new_instance_list=[]
+        self.new_instance_list=['i-0d4bc6982acdecbdd']
+        #self.new_instance_list=[]
         self.existing_instance_list=[]
         self.min_instances=2
         self.max_instances=5
