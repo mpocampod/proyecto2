@@ -22,7 +22,7 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
         for instances_id in self.control.get_new_instances():
             print(str(self.control.get_new_instances()))
             instances_ipv4=self.control.get_ipv4(instances_id)
-            insecure_chanel=str(instances_ipv4)+':50051'
+            insecure_chanel=str(instances_ipv4)+':5005'
             print(f'{insecure_chanel} este es el INSECURE CHANNEL')
             channel=grpc.insecure_channel(f'{str(instances_ipv4)}:50051')
             
