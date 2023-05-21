@@ -47,42 +47,25 @@ class MonitorC(monitor_pb2_grpc.MonitorServicer):
         return respuesta.response
     
     # Función para detectar la vivacidad de las instancias de AppInstance
-    def ping_pong(self):
+    def ping_pong(self,request,context):
         """debo revisar el tema de las instancias o como es que se va a ver"""
         #El metodo se conecta con el MonitorS para dar su respuesta
-
-        # Nombre del programa que deseas verificar si está en ejecución
-        program_name = "calculadora.py"
-
-        if self.check_process_running(program_name):
-            ans=(f"El programa '{program_name}' está en ejecución.")
-            print(ans)
-        else:
-            ans=(f"El programa '{program_name}' no está en ejecución.")
-            print(ans)
-        
-        return self.stub.Ping(monitor_pb2.PingResponse(message=ans))
+        for conexion in psutil.net_connections():
+            if conexion.laddr.port == 50052 and conexion.status == psutil.CONN_LISTEN:
+                return monitor_pb2.PingResponse(message='la app está ejecutandose')
+        return monitor_pb2.PingResponse(message='la app no está ejecutandose')
 
     
     def simulacion(self): 
         cambio=random.uniform(-5, 5)
         self.capacidad+=cambio
         self.capacidad= max(0, min(100, self.capacidad))
-
         return self.capacidad
         
         
     def GetMetrics(self,request,context):
         metric=monitor_pb2.Metric(capacidad=float(5))
         return monitor_pb2.GetMetricsResponse(metrics=[metric])
-
-    
-
-    def check_process_running(self,process_name):
-        for process in psutil.process_iter(['name']):
-            if process.info['name'] == process_name:
-                return True
-        return False
 
 
 def serve():
