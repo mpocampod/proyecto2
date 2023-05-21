@@ -46,10 +46,7 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
     def Ping(self):
         print('entra al ping')
         for stubs in self.my_stub:
-            request = monitor_pb2.PingRequest()
-            request.message = 'Ping'
-            serialized_request = request.SerializeToString()
-            response = stubs.Ping(serialized_request)
+            response= stubs.Ping(monitor_pb2.PingRequest(message='Ping'))
             print(str(response.message))
         return response.message
 
