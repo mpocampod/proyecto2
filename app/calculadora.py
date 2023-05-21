@@ -28,4 +28,4 @@ def calculator():
 def template():
     return render_template('calculator.html')
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',port=50053)
+    app.run(host='0.0.0.0',port=50052)

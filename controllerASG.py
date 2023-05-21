@@ -44,7 +44,7 @@ class controllerASG:
             ipv4_publico = response['Reservations'][0]['Instances'][0]['PublicIpAddress']
             print(f"La dirección IP pública de la instancia es: {ipv4_publico}")
             self.new_instance_list.append(instance_id)
-            time.sleep(120)
+            #time.sleep(120)
         except Exception as e:
             print(e)
         
