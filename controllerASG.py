@@ -30,15 +30,15 @@ class controllerASG:
             response=self.ec2_client.run_instances(
                 LaunchTemplate={
                     'LaunchTemplateId': 'lt-0fc98f2e6765ec1ad'
-                    },
+                },
+                ImageId='ami-013d6ae76556595f0',
                 MinCount=1,
                 MaxCount=1
                 )
             instance_id = response['Instances'][0]['InstanceId']
             self.ec2_client.get_waiter('instance_running').wait(InstanceIds=[instance_id])
+            
             # Obtener la dirección IP pública de la instancia
-            print('ver la salida')
-            #output=response.get_console_output(instance_id)
             response = self.ec2_client.describe_instances(InstanceIds=[instance_id])
             ipv4_publico = response['Reservations'][0]['Instances'][0]['PublicIpAddress']
             print(f"La dirección IP pública de la instancia es: {ipv4_publico}")
