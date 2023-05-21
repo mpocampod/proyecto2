@@ -38,7 +38,6 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
             capacidad=capacidad_metrics[0].capacidad
             print(f'este es la capacidad {capacidad}')
             capacidad_list.append(capacidad)
-        print(f'lista de capacidades {capacidad_list}')
         return capacidad_list
 
 
@@ -68,7 +67,8 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
         elif len(instances)<self.control.max_instances and uso>=self.max_cap: #caso2 normal de instancias y alto uso de
             print('entro al caso 2')
             #creo instancia
-            self.control.create_instance()
+            instance_id=self.control.create_instance()
+            self.set_connection(instance_id)
             print('se ha creado la instancia nueva')
             return 60,60
         
@@ -113,14 +113,20 @@ def main():
             print(f'este es el uso de la maquina 1: {decremento} (resto)')
             try:
                 aumento,decremento=monitor_s.autoscaling_policy(aumento)
+                
+            except:
+                print('no pasa nada en aumento ')
+            
+            try:
                 aumento,decremento=monitor_s.autoscaling_policy(decremento)
             except:
-                print('no pasa nada')
+                print('no pasa nada en decremento')
+                
             if aumento==0 and decremento==0:
                 print('entra al 0-0')
                 
             
-            time.sleep(6)
+            time.sleep(5)
     except KeyboardInterrupt:
         server.stop(0)
     
