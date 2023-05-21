@@ -12,8 +12,8 @@ class controllerASG:
             aws_session_token='FwoGZXIvYXdzEIH//////////wEaDOI0kzdILB8fyLdnEyLIAY2alKpJx0symaAkJX/bTc3DrxnsTXZdq7w4Uf32lIK9wE8ErOwdIsykdHm4wAEY4y+14PY/0jICgtfh7e9+kOXL5NooO3M6MMZQbuExV34p5teoPjhOM8nlRQmqFOnSgHI7EDJRrG9Vf3pxwHmyidX0arcqJ0PGmbaDXuTQWXude/J+ctTXdlyiiUJ15JWLiRuHNRJbYiKMVK3XRtUTWloDTyOuuprrH6rTvAafiRMTYkrJkev6xX9wDYrvAjK3iB/XAaSw6EtHKPC4paMGMi1wTKgyfsg9XQsw9BZfgwOKGV6Hk6Pcha7S5oRdkRnrdMVIpitbjzi7tK6sbcY=',
             aws_secret_access_key='g/1urUVS7IPGMB4Thoea+FETS+KdjEoHRkr+Zl+z'
         )
-        self.new_instance_list=['i-0eb76cb45eb94cfd2','i-0913b2e280d131c82']
-        #self.new_instance_list=[]
+        #self.new_instance_list=['i-0eb76cb45eb94cfd2','i-0913b2e280d131c82']
+        self.new_instance_list=[]
         self.existing_instance_list=[]
         self.min_instances=2
         self.max_instances=5
