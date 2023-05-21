@@ -25,20 +25,9 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
             
             self.stub = monitor_pb2_grpc.MonitorStub(channel)
             self.my_stub.append(self.stub)
-        time.sleep(120)
         self.min_cap=30
         self.max_cap=80
 
-    #used instances NUEVO_____________
-    def get_used_instances(self):
-        used_instances = []
-        instances = self.control.get_all_instances()  
-
-        for instance in instances:
-            if instance.state == "running":  # Verificar el estado de la instancia
-                used_instances.append(instance)
-
-        return used_instances 
     # Función para consultar el estado de las instancias de AppInstance
     def GetMetrics(self):
         # Llama al método GetMetrics del MonitorC para obtener la capacidad de la instancia
@@ -96,7 +85,14 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
             return 45,45
         
         
-    
+    def set_connection(self,instance_id):
+        instances_ipv4=self.control.get_ipv4(instance_id)
+        insecure_chanel=str(instances_ipv4)+':50053'
+        print(f'{insecure_chanel} la conexion con el monitor C')
+        channel=grpc.insecure_channel(f'{str(instances_ipv4)}:50053')
+        self.stub = monitor_pb2_grpc.MonitorStub(channel)
+        self.my_stub.append(self.stub)
+        
 def main():
     monitor_s=MonitorS()
     # Crear una instancia del servidor gRPC para el MonitorS
