@@ -46,7 +46,7 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
     def Ping(self):
         print('entra al ping')
         for stubs in self.my_stub:
-            response= stubs.Ping(monitor_pb2.PingRequest(message='Ping'))
+            response= stubs.Ping(monitor_pb2.PingRequest({'message':'Ping'}))
             print(str(response.message))
         return response.message
 
@@ -108,7 +108,7 @@ def main():
     try:
         while True:
             #ans=monitor_s.GetMetrics()
-            monitor_s.Ping()
+            message_ping=monitor_s.Ping()
             """aumento+=ans[0]
             decremento-=ans[1]
             print(f'este es el uso de la maquina 0: {aumento} (sumo)')

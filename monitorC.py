@@ -48,11 +48,10 @@ class MonitorC(monitor_pb2_grpc.MonitorServicer):
     
     # Función para detectar la vivacidad de las instancias de AppInstance
     def Ping(self,request,context):
-        """debo revisar el tema de las instancias o como es que se va a ver"""
         #El metodo se conecta con el MonitorS para dar su respuesta
-        """for conexion in psutil.net_connections():
+        for conexion in psutil.net_connections():
             if conexion.laddr.port == 50052 and conexion.status == psutil.CONN_LISTEN:
-                return monitor_pb2.PingResponse(message='la app está ejecutandose')"""
+                return monitor_pb2.PingResponse(message='la app está ejecutandose')
         return monitor_pb2.PingResponse(message='la app no está ejecutandose')
 
     
