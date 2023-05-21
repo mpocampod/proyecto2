@@ -29,9 +29,9 @@ class controllerASG:
 
             response=self.ec2_client.run_instances(
                 LaunchTemplate={
-                    'LaunchTemplateId': 'lt-0fc98f2e6765ec1ad'
+                    'LaunchTemplateId': 'lt-0527ca52e2b9524f8'
                 },
-                ImageId='ami-013d6ae76556595f0',
+                ImageId='ami-007855ac798b5175e',
                 MinCount=1,
                 MaxCount=1
                 )
