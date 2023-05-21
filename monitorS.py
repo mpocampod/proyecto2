@@ -27,7 +27,7 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
             self.my_stub.append(self.stub)
         time.sleep(120)
         self.min_cap=30
-        self.max_cap=60
+        self.max_cap=80
 
     #used instances NUEVO_____________
     def get_used_instances(self):
@@ -41,13 +41,16 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
         return used_instances 
     # Función para consultar el estado de las instancias de AppInstance
     def GetMetrics(self):
-# Llama al método GetMetrics del MonitorC para obtener la capacidad de la instancia
+        # Llama al método GetMetrics del MonitorC para obtener la capacidad de la instancia
+        capacidad_list=[]
         for stubs in self.my_stub:
             peticion=stubs.GetMetrics(monitor_pb2.GetMetricsRequest())
             capacidad_metrics = peticion.metrics
             capacidad=capacidad_metrics[0].capacidad
-            print(f'este es la capacidad {capacidad} y el stub {stubs}')
-        return int(capacidad)
+            print(f'este es la capacidad {capacidad}')
+            capacidad_list.append(capacidad)
+        print(f'lista de capacidades {capacidad_list}')
+        return capacidad_list
 
 
     
@@ -59,29 +62,16 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
         return response.message
 
 
-    def autoscaling_policy(self):
+    def autoscaling_policy(self,uso):
         """Este método se encargaría de definir las políticas de creación y destrucción de instancias para el grupo
           de autoescalado. Debería tomar como parámetros la configuración de las políticas (por ejemplo,
           el número mínimo y máximo de instancias) y la configuración de las métricas que se utilizarán para
             determinar cuándo se deben crear o destruir instancias.
         """        
-        instances = self.control.get_all_instances()
-        metricas = self.GetMetrics()
-        for metrica in metricas:
-            capacidad = metrica.capacidad
-            # Realiza las operaciones necesarias con la capacidad
-            print(f'Capacidad recibida: {capacidad}')
-
-        #USED INSTANCES NUEVO_________
-        used_instances = self.control.get_used_instances()
+        instances = self.control.new_instance_list
+        print(f'en este momento existen {len(instances)} instancias')
         
-        # Eliminar instancias no utilizadas NUEVO_________________________
-        for instance in instances:
-            if instance not in used_instances:
-                self.control.terminate_instance(instance)
-                print(f"Instancia {instance} terminada")
-
-        #si se tienen 2 instancias y la capacidad esta alta entonces se crea otra instancia (llamar al metodo del controller de create_intance)
+        '''#si se tienen 2 instancias y la capacidad esta alta entonces se crea otra instancia (llamar al metodo del controller de create_intance)
         if len(instances) < self.control.min_instances or len(instances ) >= self.control.min_instances and metricas > self.max_cap:
         # Crear una nueva instancia
             self.control.create_instance()
@@ -94,9 +84,7 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
         #si se tienen 5 instancias y la capacidad es alta, no se puede create_intance
         elif len(instances)>self.control.max_instances and metricas > self.max_cap:
             print('Ya no se pueden crear mas instancias ya que está en el limite')
-        
-        #si la instancia está usandosose mucho, la elimina
-        #if len(instances)
+        '''
     
 def main():
     monitor_s=MonitorS()
@@ -106,18 +94,21 @@ def main():
     server.add_insecure_port('[::]:50051')
     server.start()
     print(f'MonitorS en ejecución en el puerto 50051')
-    contador=0
+    aumento=decremento=60
     
     # Loop principal para consultar el estado de las instancias de AppInstance
     try:
         while True:
             ans=monitor_s.GetMetrics()
-            contador+=ans
-            print(f'este es el uso de la maquina {contador}')
-            
+            aumento+=ans[0]
+            decremento-=ans[1]
+            print(f'este es el uso de la maquina 0: {aumento} (sumo)')
+            print(f'este es el uso de la maquina 0: {decremento} (resto)')
+            monitor_s.autoscaling_policy(aumento)
+            monitor_s.autoscaling_policy(decremento)
             #monitor_s.autoscaling_policy()
             
-            time.sleep(2)
+            time.sleep(3)
     except KeyboardInterrupt:
         server.stop(0)
     
