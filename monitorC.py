@@ -95,4 +95,5 @@ def serve():
 
 if __name__ == '__main__':
     serv = multiprocessing.Process(target=serve)
+    #aca puede ir el ping
     serv.start()
