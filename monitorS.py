@@ -107,9 +107,9 @@ def main():
     # Loop principal para consultar el estado de las instancias de AppInstance
     try:
         while True:
-            #ans=monitor_s.GetMetrics()
+            ans=monitor_s.GetMetrics()
             message_ping=monitor_s.Ping()
-            """aumento+=ans[0]
+            aumento+=ans[0]
             decremento-=ans[1]
             print(f'este es el uso de la maquina 0: {aumento} (sumo)')
             print(f'este es el uso de la maquina 1: {decremento} (resto)')
@@ -125,7 +125,7 @@ def main():
                 print('no pasa nada en decremento')
                 
             if aumento==0 and decremento==0:
-                print('entra al 0-0')"""
+                print('entra al 0-0')
                 
             
             time.sleep(5)
