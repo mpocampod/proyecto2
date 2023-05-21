@@ -110,9 +110,12 @@ def main():
             aumento+=ans[0]
             decremento-=ans[1]
             print(f'este es el uso de la maquina 0: {aumento} (sumo)')
-            print(f'este es el uso de la maquina 0: {decremento} (resto)')
-            aumento,decremento=monitor_s.autoscaling_policy(aumento)
-            aumento,decremento=monitor_s.autoscaling_policy(decremento)
+            print(f'este es el uso de la maquina 1: {decremento} (resto)')
+            try:
+                aumento,decremento=monitor_s.autoscaling_policy(aumento)
+                aumento,decremento=monitor_s.autoscaling_policy(decremento)
+            except:
+                print('no pasa nada')
             if aumento==0 and decremento==0:
                 print('entra al 0-0')
                 
