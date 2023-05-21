@@ -47,7 +47,7 @@ class MonitorC(monitor_pb2_grpc.MonitorServicer):
         return respuesta.response
     
     # Función para detectar la vivacidad de las instancias de AppInstance
-    def ping_pong(self,request,context):
+    def Ping(self,request,context):
         """debo revisar el tema de las instancias o como es que se va a ver"""
         #El metodo se conecta con el MonitorS para dar su respuesta
         for conexion in psutil.net_connections():
