@@ -46,7 +46,7 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
     def Ping(self):
         print('entra al ping')
         for stubs in self.my_stub:
-            response= stubs.Ping(monitor_pb2.PingRequest({'message':'Ping'}))
+            response= stubs.Ping({'message':'Ping'})
             print(str(response.message))
         return response.message
 
