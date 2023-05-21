@@ -64,27 +64,38 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
 
     def autoscaling_policy(self,uso):
         """Este método se encargaría de definir las políticas de creación y destrucción de instancias para el grupo
-          de autoescalado. Debería tomar como parámetros la configuración de las políticas (por ejemplo,
-          el número mínimo y máximo de instancias) y la configuración de las métricas que se utilizarán para
+            de autoescalado. Debería tomar como parámetros la configuración de las políticas (por ejemplo,
+            el número mínimo y máximo de instancias) y la configuración de las métricas que se utilizarán para
             determinar cuándo se deben crear o destruir instancias.
         """        
         instances = self.control.new_instance_list
         print(f'en este momento existen {len(instances)} instancias')
         
-        '''#si se tienen 2 instancias y la capacidad esta alta entonces se crea otra instancia (llamar al metodo del controller de create_intance)
-        if len(instances) < self.control.min_instances or len(instances ) >= self.control.min_instances and metricas > self.max_cap:
-        # Crear una nueva instancia
+        if len(instances)==self.control.min_instances and uso<=self.min_cap: #caso1 minimo de instancias y bajo uso de CPU
+            print('entro al caso 1')
+            print('no se pueden eliminar mas intancias porque ya está en el minimo de instancias')
+            return 60,60
+        
+        elif len(instances)<self.control.max_instances and uso>=self.max_cap: #caso2 normal de instancias y alto uso de
+            print('entro al caso 2')
+            #creo instancia
             self.control.create_instance()
-    
-        #si se tienen 5 instancias o menos y la capacidad es bajita eliminar instancias (llamar al metodo del controller terminate_instance)
-        elif len(instances) <= self.control.max_instances and metricas < self.min_cap:
-            self.control.terminate_instance('i-0b13cb0b4921008b4')
-            print('terminando instancia i-0b13cb0b4921008b4')
-
-        #si se tienen 5 instancias y la capacidad es alta, no se puede create_intance
-        elif len(instances)>self.control.max_instances and metricas > self.max_cap:
-            print('Ya no se pueden crear mas instancias ya que está en el limite')
-        '''
+            print('se ha creado la instancia nueva')
+            return 60,60
+        
+        elif len(instances)>self.control.min_instances and len(instances)<=self.control.max_instances and uso<=self.min_cap: #caso3 normal de instancias y bajo uso de cpu
+            print('entro al caso 3')
+            #borro la ultima instancia en la lista
+            last_instance=instances[-1]
+            self.control.terminate_instance(last_instance)
+            return 0,0
+        
+        elif len(instances)==self.control.max_instances and uso>=self.max_cap: #caso4 maximo de instancias y mucho uso
+            print('entro al caso 4')
+            print('No se pueden crear mas instancias porque ya está en el maximo de instancias')
+            return 45,45
+        
+        
     
 def main():
     monitor_s=MonitorS()
@@ -94,8 +105,8 @@ def main():
     server.add_insecure_port('[::]:50051')
     server.start()
     print(f'MonitorS en ejecución en el puerto 50051')
-    aumento=decremento=60
-    
+    aumento=decremento=45
+    cont=0
     # Loop principal para consultar el estado de las instancias de AppInstance
     try:
         while True:
@@ -104,11 +115,13 @@ def main():
             decremento-=ans[1]
             print(f'este es el uso de la maquina 0: {aumento} (sumo)')
             print(f'este es el uso de la maquina 0: {decremento} (resto)')
-            monitor_s.autoscaling_policy(aumento)
-            monitor_s.autoscaling_policy(decremento)
-            #monitor_s.autoscaling_policy()
+            aumento,decremento=monitor_s.autoscaling_policy(aumento)
+            aumento,decremento=monitor_s.autoscaling_policy(decremento)
+            if aumento==0 and decremento==0:
+                print('entra al 0-0')
+                
             
-            time.sleep(3)
+            time.sleep(6)
     except KeyboardInterrupt:
         server.stop(0)
     
