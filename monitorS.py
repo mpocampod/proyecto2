@@ -46,7 +46,8 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
             peticion=stubs.GetMetrics(monitor_pb2.GetMetricsRequest())
             capacidad_metrics = peticion.metrics
             capacidad=capacidad_metrics[0].capacidad
-        return print(f'este es la capacidad {capacidad}')
+            print(f'este es la capacidad {capacidad} y el stub {stubs}')
+        return int(capacidad)
 
 
     
@@ -105,12 +106,15 @@ def main():
     server.add_insecure_port('[::]:50051')
     server.start()
     print(f'MonitorS en ejecución en el puerto 50051')
-
+    contador=0
     
     # Loop principal para consultar el estado de las instancias de AppInstance
     try:
         while True:
-            monitor_s.GetMetrics()
+            ans=monitor_s.GetMetrics()
+            contador+=ans
+            print(f'este es el uso de la maquina {contador}')
+            
             #monitor_s.autoscaling_policy()
             
             time.sleep(2)
