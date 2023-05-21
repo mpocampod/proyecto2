@@ -28,8 +28,7 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
             
             self.stub = monitor_pb2_grpc.MonitorStub(channel)
             self.my_stub.append(self.stub)
-            #print(f'este es my_stub {str(self.my_stub)}')
-        print('PASOOOOO EL INIt')
+        time.sleep(180)
         self.min_cap=30
         self.max_cap=60
 
