@@ -8,8 +8,8 @@ import random
 from concurrent import futures
 
 class MonitorC(monitor_pb2_grpc.MonitorServicer):
-    def __init__(self,jost,):
-        host=jost
+    def __init__(self):
+        host='[::]:50053'
         self.alive = True
         self.capacidad=40
         channel=grpc.insecure_channel(host)
@@ -72,11 +72,9 @@ class MonitorC(monitor_pb2_grpc.MonitorServicer):
         return self.capacidad
         
         
-    def GetMetrics(self,request):
-
-        #self.capacidad= self.simulacion()
-        self.capacidad=int(input('que resultado de la simulación desea?'))
-        return monitor_pb2.GetMetricsResponse(capacidad=self.capacidad)
+    def GetMetrics(self,request,context):
+        metric=monitor_pb2.Metric(capacidad=float(5))
+        return monitor_pb2.GetMetricsResponse(metrics=[metric])
 
     
 
@@ -88,20 +86,12 @@ class MonitorC(monitor_pb2_grpc.MonitorServicer):
 
 
 def serve():
-    host='[::]:50051'
-    monitorc_temp=MonitorC(host)
-    
+    monitorc_temp=MonitorC()
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    monitor_pb2_grpc.add_MonitorServicer_to_server(MonitorC(host), server)
-    server.add_insecure_port(host)
+    monitor_pb2_grpc.add_MonitorServicer_to_server(monitorc_temp, server)
+    server.add_insecure_port('[::]:50053')
     server.start()
-    try:
-        while True:
-            estado = monitorc_temp.simulacion()
-            MonitorC.capacidad = estado
-            time.sleep(5)
-    except KeyboardInterrupt:
-        server.stop(0)
+    server.wait_for_termination()
 
 if __name__ == '__main__':
     serv = multiprocessing.Process(target=serve)

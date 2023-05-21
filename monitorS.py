@@ -16,19 +16,16 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
         self.control.check_min_instances()
         self.my_stub=[]
         
-        #channel=grpc.insecure_channel('44.201.192.212:50051')
-        #channel=grpc.insecure_channel('44.202.49.41:50051')
-        
         for instances_id in self.control.get_new_instances():
             print(str(self.control.get_new_instances()))
             instances_ipv4=self.control.get_ipv4(instances_id)
             insecure_chanel=str(instances_ipv4)+':5005'
             print(f'{insecure_chanel} este es el INSECURE CHANNEL')
-            channel=grpc.insecure_channel(f'{str(instances_ipv4)}:50051')
+            channel=grpc.insecure_channel(f'{str(instances_ipv4)}:50053')
             
             self.stub = monitor_pb2_grpc.MonitorStub(channel)
             self.my_stub.append(self.stub)
-        time.sleep(180)
+        time.sleep(120)
         self.min_cap=30
         self.max_cap=60
 
@@ -46,11 +43,10 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
     def GetMetrics(self):
 # Llama al método GetMetrics del MonitorC para obtener la capacidad de la instancia
         for stubs in self.my_stub:
-            respuesta_metricas=stubs.GetMetrics(monitor_pb2.GetMetricsRequest())
-            capacidad = respuesta_metricas.capacidad
-            print(capacidad)
-
-        return monitor_pb2.GetMetricsResponse(capacidad=capacidad) #revisar esto
+            peticion=stubs.GetMetrics(monitor_pb2.GetMetricsRequest())
+            capacidad_metrics = peticion.metrics
+            capacidad=capacidad_metrics[0].capacidad
+        return print(f'este es la capacidad {capacidad}')
 
 
     
@@ -108,15 +104,14 @@ def main():
     monitor_pb2_grpc.add_MonitorServicer_to_server(monitor_s, server)
     server.add_insecure_port('[::]:50051')
     server.start()
-    print(f'MonitorS en ejecución en el puerto ')
+    print(f'MonitorS en ejecución en el puerto 50051')
 
     
     # Loop principal para consultar el estado de las instancias de AppInstance
     try:
         while True:
-            estado = monitor_s.GetMetrics()
-            MonitorS.capacidad=estado
-            monitor_s.autoscaling_policy()
+            monitor_s.GetMetrics()
+            #monitor_s.autoscaling_policy()
             
             time.sleep(2)
     except KeyboardInterrupt:
