@@ -17,10 +17,10 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
         self.my_stub=[]
         
         for instances_id in self.control.get_new_instances():
-            print(str(self.control.get_new_instances()))
+            #print(str(self.control.get_new_instances()))
             instances_ipv4=self.control.get_ipv4(instances_id)
-            insecure_chanel=str(instances_ipv4)+':5005'
-            print(f'{insecure_chanel} este es el INSECURE CHANNEL')
+            insecure_chanel=str(instances_ipv4)+':50053'
+            print(f'{insecure_chanel} la conexion con el monitor C')
             channel=grpc.insecure_channel(f'{str(instances_ipv4)}:50053')
             
             self.stub = monitor_pb2_grpc.MonitorStub(channel)
