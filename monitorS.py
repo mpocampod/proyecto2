@@ -108,7 +108,7 @@ def main():
     try:
         while True:
             #ans=monitor_s.GetMetrics()
-            monitor_s.Ping(request='ping',context='a')
+            monitor_s.ping()
             """aumento+=ans[0]
             decremento-=ans[1]
             print(f'este es el uso de la maquina 0: {aumento} (sumo)')
