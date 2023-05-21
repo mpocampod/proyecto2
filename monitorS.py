@@ -43,7 +43,7 @@ class MonitorS(monitor_pb2_grpc.MonitorServicer):
 
     
     # Función para detectar la vivacidad de las instancias de AppInstance
-    def ping(self):
+    def Ping(self):
         print('entra al ping')
         for stubs in self.my_stub:
             response= stubs.Ping(monitor_pb2.PingRequest(message='Ping'))
@@ -108,7 +108,7 @@ def main():
     try:
         while True:
             #ans=monitor_s.GetMetrics()
-            monitor_s.ping()
+            monitor_s.Ping()
             """aumento+=ans[0]
             decremento-=ans[1]
             print(f'este es el uso de la maquina 0: {aumento} (sumo)')
