@@ -10,6 +10,10 @@ Juan Jose Sanchez Cortes ***jjsanchezc@eafit.edu.co***
 
 Maria José Gutiérrez Estrada. ***mjgutierre@eafit.edu.co***
 
+## Tabla de contenido 
+1. [Arquitectura](https://github.com/mpocampod/proyecto2/tree/master#arquitectura)
+2. [Definición del Proyecto](https://github.com/mpocampod/proyecto2/tree/master#definición-del-proyecto)
+5. [Documentación Técnica](https://github.com/mpocampod/proyecto2/tree/master#documentación-técnica)
 
 ## Arquitectura 
 
