@@ -26,7 +26,7 @@ Este proyecto diseñará e implementará un servicio de auto escalamiento que op
 2. Algunos de los servicios que implementará MonitorC son:
   
    - [Ping/Pong](https://github.com/mpocampod/proyecto2/blob/master/monitorS.py) o Heartbeat para detectar vivacidad de la instancia de la AppInstance 
-   - GetMetrics: conjunto de métricas como Carga (medida entre 0 y 100% que mide la carga de una máquina), para efectos de este proyecto, se simulo y modifico esta métrica. Haciendo que esta función de simulación cambie gradualmente y no bruscamente.
+   - [GetMetrics:](https://github.com/mpocampod/proyecto2/blob/master/monitorS.py#L32) conjunto de métricas como Carga (medida entre 0 y 100% que mide la carga de una máquina), para efectos de este proyecto, se simulo y modifico esta métrica. Haciendo que esta función de simulación cambie gradualmente y no bruscamente.
    - Existe el Registro y Desregistro del MonitorS
 
 3. ControllerASG: Es un proceso o aplicación que corre en la misma instancia del MonitorS. Tiene acceso a toda la información recolectada por el el MonitorS por medio de memoria
