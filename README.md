@@ -13,9 +13,13 @@ Maria José Gutiérrez Estrada. ***mjgutierre@eafit.edu.co***
 
 ## Arquitectura 
 
-![image](https://github.com/mpocampod/proyecto2/assets/68908889/ae810e52-220e-48da-96b1-306773c1a57c)
+<p align="center">
+  <img src="https://github.com/mpocampod/proyecto2/assets/68908889/ae810e52-220e-48da-96b1-306773c1a57c" alt="Arquitectura" width="" height="" style="display: block; margin: auto;">
+</p>
 
 ## Definición del Proyecto. 
+
+> Darle click a los metodos para ir directamente a la linea de estos en el codigo
 
 Este proyecto diseñará e implementará un servicio de auto escalamiento que operará sobre instancias EC2 de AWS de Amazon. A nivel de aplicaciones o procesos, se diseñarán e implementarán tres así: 
 
@@ -25,7 +29,7 @@ Este proyecto diseñará e implementará un servicio de auto escalamiento que op
  
 2. Algunos de los servicios que implementará MonitorC son:
   
-   - [Ping/Pong](https://github.com/mpocampod/proyecto2/blob/master/monitorS.py#L46) o Heartbeat para detectar vivacidad de la instancia de la AppInstance 
+   - [Ping/Pong](https://github.com/mpocampod/proyecto2/blob/master/monitorC.py#L50) o Heartbeat para detectar vivacidad de la instancia de la AppInstance 
    - [GetMetrics:](https://github.com/mpocampod/proyecto2/blob/master/monitorS.py#L32) conjunto de métricas como Carga (medida entre 0 y 100% que mide la carga de una máquina), para efectos de este proyecto, se simulo y modifico esta métrica. Haciendo que esta función de simulación cambie gradualmente y no bruscamente.
    - Existe el [Registro](https://github.com/mpocampod/proyecto2/blob/master/monitorC.py#L19) y [Desregistro](https://github.com/mpocampod/proyecto2/blob/master/monitorC.py#L35) del MonitorS
 
@@ -69,7 +73,9 @@ Aqui se podra empezar a ver los siguientes sucesos.
 
 ### Caso 1 del autoscaling Policy monitoreado
 
-<img width="521" alt="MicrosoftTeams-image (2)" src="https://github.com/mpocampod/proyecto2/assets/68908889/34f94c87-e21f-4e3c-8b57-72e89bdc60ae">
+<p align="center">
+  <img src="https://github.com/mpocampod/proyecto2/assets/68908889/34f94c87-e21f-4e3c-8b57-72e89bdc60ae" alt="CASO1" width="521" height="" style="display: block; margin: auto;">
+</p>
 
 Esto sucede en el codigo del Monitor S cuando hay un numero minimo de instancias y bajo uso de CPU, entonces creará otra instancia
 
@@ -80,7 +86,9 @@ Esto sucede en el codigo del Monitor S cuando hay un numero minimo de instancias
 
 ### Caso 2 del autoscaling Policy monitoreado
 
-<img width="405" alt="MicrosoftTeams-image (3)" src="https://github.com/mpocampod/proyecto2/assets/68908889/dc6b08a6-8492-4f95-9f3e-58839dce0d4e">
+<p align="center">
+  <img src="https://github.com/mpocampod/proyecto2/assets/68908889/dc6b08a6-8492-4f95-9f3e-58839dce0d4e" alt="CASO2" width="405" height="" style="display: block; margin: auto;">
+</p>
 
 Esto sucede en el codigo del Monitor S cuando hay un numero normal de instancias y alto uso de CPU entonces creará otra instancia
 
@@ -94,7 +102,9 @@ Esto sucede en el codigo del Monitor S cuando hay un numero normal de instancias
 
 ### Caso 3 del autoscaling Policy monitoreado
 
-<img width="754" alt="MicrosoftTeams-image (4)" src="https://github.com/mpocampod/proyecto2/assets/68908889/70cc951f-e7f2-4442-89ca-3784082129ca">
+<p align="center">
+  <img src="https://github.com/mpocampod/proyecto2/assets/68908889/70cc951f-e7f2-4442-89ca-3784082129ca" alt="CASO3" width="754" height="" style="display: block; margin: auto;">
+</p>
 
       elif len(instances)>self.control.min_instances and len(instances)<=self.control.max_instances and uso<=self.min_cap: 
             print('entro al caso 3')
@@ -107,7 +117,9 @@ Esto sucede en el codigo del Monitor S cuando hay un numero normal de instancias
 
 ### Caso 4 del autoscaling Policy monitoreado, cuando hay un caso maximo de instancias y maximo de capacidad
 
-<img width="498" alt="MicrosoftTeams-image (1)" src="https://github.com/mpocampod/proyecto2/assets/68908889/158fe951-5a43-4ae7-9df3-139ad0d4cf58">
+<p align="center">
+  <img src="https://github.com/mpocampod/proyecto2/assets/68908889/158fe951-5a43-4ae7-9df3-139ad0d4cf58" alt="CASO4" width="498" height="" style="display: block; margin: auto;">
+</p>
 
       elif len(instances)==self.control.max_instances and uso>=self.max_cap: #caso4 maximo de instancias y mucho uso
             print('entro al caso 4')
