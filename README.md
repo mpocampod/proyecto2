@@ -27,7 +27,7 @@ Este proyecto diseñará e implementará un servicio de auto escalamiento que op
   
    - [Ping/Pong](https://github.com/mpocampod/proyecto2/blob/master/monitorS.py#L46) o Heartbeat para detectar vivacidad de la instancia de la AppInstance 
    - [GetMetrics:](https://github.com/mpocampod/proyecto2/blob/master/monitorS.py#L32) conjunto de métricas como Carga (medida entre 0 y 100% que mide la carga de una máquina), para efectos de este proyecto, se simulo y modifico esta métrica. Haciendo que esta función de simulación cambie gradualmente y no bruscamente.
-   - Existe el Registro y Desregistro del MonitorS
+   - Existe el [Registro](https://github.com/mpocampod/proyecto2/blob/master/monitorC.py#L19) y [Desregistro](https://github.com/mpocampod/proyecto2/blob/master/monitorC.py#L35) del MonitorS
 
 3. [ControllerASG:](https://github.com/mpocampod/proyecto2/blob/master/controllerASG.py) Es un proceso o aplicación que corre en la misma instancia del MonitorS. Tiene acceso a toda la información recolectada por el el MonitorS por medio de memoria
 compartida. Este ControllerASG ejecuta las siguientes funciones:
@@ -52,7 +52,7 @@ Crear instancias necesarias con las siguientes especificaciones.
   - Disco duro: EBS
   - VPC
   - Security Group
-  - Key pair: por defecto asigne P2.pem
+  - Key pair: asigne P2.pem
 
 Luego se podra conectar por consola y ejecutar los siguientes comandos 
 
