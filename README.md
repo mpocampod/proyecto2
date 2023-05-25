@@ -50,6 +50,8 @@ Este proyecto diseñará e implementará un servicio de auto escalamiento que op
     - El ControllerASG define minInstances igual a 2, maxInstance menor a 5, con una politica de creación y otra política de destrucción de instancias
 
 ## Documentación Técnica
+### Grupos de seguridad
+para los grupos de seguridad debemos permitir el uso de los puertos 22 para el SSH, 50051,50052 y 50053 para permitir que el monitorS, monitorC y controllerASG puedan funcionar correctamente
 
 ### MonitorS
 
@@ -87,7 +89,6 @@ Luego guardamos y podemos ejecutar nuestro monitorS
         python3 monitorS.py
 
 Aqui se podra empezar a ver los siguientes sucesos.
-
 ### Caso 1 del autoscaling Policy monitoreado
 
 <p align="center">
