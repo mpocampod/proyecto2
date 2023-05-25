@@ -13,7 +13,9 @@ Maria José Gutiérrez Estrada. ***mjgutierre@eafit.edu.co***
 ## Tabla de contenido 
 1. [Arquitectura](https://github.com/mpocampod/proyecto2/tree/master#arquitectura)
 2. [Definición del Proyecto](https://github.com/mpocampod/proyecto2/tree/master#definición-del-proyecto)
-5. [Documentación Técnica](https://github.com/mpocampod/proyecto2/tree/master#documentación-técnica)
+3. [Documentación Técnica](https://github.com/mpocampod/proyecto2/tree/master#documentación-técnica)
+4. [Logros](https://github.com/mpocampod/proyecto2/tree/master#logros)
+
 
 ## Arquitectura 
 
@@ -144,3 +146,24 @@ Esto sucede en el codigo del Monitor S cuando hay un numero normal de instancias
 Esto sucede en el codigo del Monitor S cuando hay un numero maximo de instancias (5) y mucho uso de CPU, entonces imprime el mensaje de no se pueden crear mas instancias. 
  
   
+## Logros 
+
+1. [x] MonitorS: Proceso principal de monitoreo que periódicamente consulta el estado de vivacidad y carga de las instancias de aplicación (AppInstance) en las cuales correo un proceso MonitorC que ofrece varios servicios mediante una API hacia el MonitorS.
+
+2. [x] Las comunicaciones entre MonitorS y MonitorC es a través de gRPC.
+ 
+3. [x] MonitorC con:
+  
+   - [x] Ping/Pong o Heartbeat para detectar vivacidad de la instancia de la AppInstance 
+   - [x] GetMetrics: conjunto de métricas como Carga (medida entre 0 y 100% que mide la carga de una máquina), para efectos de este proyecto, se simulo y modifico esta métrica. Haciendo que esta función de simulación cambie gradualmente y no bruscamente.
+   - [x] Existe el Registro y Desregistro del MonitorS
+
+3. [x] ControllerASG con:
+
+  - [x]  Se comunica con el API SDK de la nube para ejecutar diferentes funciones de Infraestructura como Código, es decir, mediante programación puede invocar la creación, modificación, borrado entre otros de diferentes servicios de nube.
+      - [x] En este caso, se requiere solo acceder al servicio de gestión de instancias EC2.
+      - [x] primero se instanciara una máquina EC2 con el software base, la AppInstance y el agente MonitorC.
+  - [x] Se define el mecanismo de configuración de la IP o URL o un servicio de localización del MonitorS.
+  - [x] A partir de esta instancia, se deberá crear una imagen AMI personalizada, que servirá de base para la creación de nuevas instancias por el ControllerASG.
+  - Otros parámetros que requiera.
+    - [x] El ControllerASG define minInstances igual a 2, maxInstance menor a 5, con una politica de creación y otra política de destrucción de instancias
