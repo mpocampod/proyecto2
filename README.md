@@ -25,16 +25,16 @@ Este proyecto diseñará e implementará un servicio de auto escalamiento que op
  
 2. Algunos de los servicios que implementará MonitorC son:
   
-   - [Ping/Pong](https://github.com/mpocampod/proyecto2/blob/master/monitorS.py) o Heartbeat para detectar vivacidad de la instancia de la AppInstance 
+   - [Ping/Pong](https://github.com/mpocampod/proyecto2/blob/master/monitorS.py#L46) o Heartbeat para detectar vivacidad de la instancia de la AppInstance 
    - [GetMetrics:](https://github.com/mpocampod/proyecto2/blob/master/monitorS.py#L32) conjunto de métricas como Carga (medida entre 0 y 100% que mide la carga de una máquina), para efectos de este proyecto, se simulo y modifico esta métrica. Haciendo que esta función de simulación cambie gradualmente y no bruscamente.
    - Existe el Registro y Desregistro del MonitorS
 
-3. ControllerASG: Es un proceso o aplicación que corre en la misma instancia del MonitorS. Tiene acceso a toda la información recolectada por el el MonitorS por medio de memoria
+3. [ControllerASG:](https://github.com/mpocampod/proyecto2/blob/master/controllerASG.py) Es un proceso o aplicación que corre en la misma instancia del MonitorS. Tiene acceso a toda la información recolectada por el el MonitorS por medio de memoria
 compartida. Este ControllerASG ejecuta las siguientes funciones:
 
   - Se comunica con el API SDK de la nube para ejecutar diferentes funciones de Infraestructura como Código, es decir, mediante programación puede invocar la creación, modificación, borrado entre otros de diferentes servicios de nube.
       - En este caso, se requiere solo acceder al servicio de gestión de instancias EC2.
-      - primero se instanciara una máquina EC2 con el software base, la AppInstance y el agente MonitorC.
+      - primero se instanciara una máquina EC2 con el software base, la [AppInstance](https://github.com/mpocampod/proyecto2/blob/master/app/calculadora.py) y el agente MonitorC.
   - Deberá pensar y definir el mecanismo de configuración de la IP o URL o un servicio de localización del MonitorS.
   - A partir de esta instancia, se deberá crear una imagen AMI personalizada, que servirá de base para la creación de nuevas instancias por el ControllerASG.
 
